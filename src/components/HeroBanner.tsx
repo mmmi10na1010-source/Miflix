@@ -1,6 +1,7 @@
 import React from 'react';
 import { Play, Plus, Check, Info, Star } from 'lucide-react';
 import { MediaItem } from '../types';
+import { normalizeImageUrl } from '../utils/imageHelper';
 
 interface HeroBannerProps {
   item: MediaItem;
@@ -22,7 +23,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       {/* Background Media with Anamorphic Fade */}
       <div className="absolute inset-0 z-0">
         <img
-          src={item.backdropUrl || item.posterUrl}
+          src={normalizeImageUrl(item.backdropUrl || item.posterUrl)}
           alt={item.title}
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover object-center scale-105 filter brightness-[0.8] contrast-[1.05]"

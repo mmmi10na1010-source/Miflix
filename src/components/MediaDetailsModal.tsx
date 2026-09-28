@@ -14,6 +14,7 @@ import {
   Zap
 } from 'lucide-react';
 import { MediaItem, Season } from '../types';
+import { normalizeImageUrl } from '../utils/imageHelper';
 
 interface MediaDetailsModalProps {
   item: MediaItem;
@@ -254,25 +255,39 @@ export const MediaDetailsModal: React.FC<MediaDetailsModalProps> = ({
             ))}
           </div>
 
-          {/* Synopsis */}
-          <div>
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-              قصة العمل
-            </h4>
-            <p className="text-sm md:text-base text-slate-300 leading-relaxed">
-              {item.synopsis}
-            </p>
-          </div>
-
-          {/* Multi-Server Information Note */}
-          <div className="p-3.5 rounded-xl bg-[#141f2e] border border-slate-700/80 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <Server className="w-4 h-4 text-cyan-400" />
-              <span className="text-xs text-slate-300">
-                يدعم هذا العمل سيرفرات تشغيل فائقة السرعة ومتعددة الجودات مع التبديل الفوري.
-              </span>
+          {/* Synopsis with Netflix / Qissat Ishq Poster Feature */}
+          <div className="flex flex-col sm:flex-row gap-5 items-start">
+            {/* High-res Vertical Poster (Qissat Ishq style) */}
+            <div className="hidden sm:block shrink-0 w-32 md:w-36 aspect-[2/3] rounded-xl overflow-hidden border border-cyan-500/40 shadow-[0_4px_20px_rgba(0,168,225,0.25)] bg-[#0c1420]">
+              <img
+                src={normalizeImageUrl(item.posterUrl || item.backdropUrl)}
+                alt={item.title}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover object-center"
+              />
             </div>
-            <span className="text-[11px] font-semibold text-cyan-400">سيرفرات جاهزة</span>
+
+            <div className="flex-1 space-y-3">
+              <div>
+                <h4 className="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                  <span>قصة وتفاصيل العمل</span>
+                </h4>
+                <p className="text-sm md:text-base text-slate-200 leading-relaxed font-normal">
+                  {item.synopsis}
+                </p>
+              </div>
+
+              {/* Multi-Server Information Note */}
+              <div className="p-3 rounded-xl bg-[#141f2e] border border-slate-700/80 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <Server className="w-4 h-4 text-cyan-400" />
+                  <span className="text-xs text-slate-300">
+                    يدعم هذا العمل سيرفرات تشغيل فائقة السرعة مع التبديل الفوري والجودة العالية.
+                  </span>
+                </div>
+                <span className="text-[11px] font-semibold text-cyan-400">سيرفرات جاهزة</span>
+              </div>
+            </div>
           </div>
 
           {/* TV Series Seasons & Episodes Selector */}
