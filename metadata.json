@@ -1,0 +1,6 @@
+{
+  "name": "MIFLIX مي فليكس - منصة البث السينمائي العربي",
+  "description": "موقع مي فليكس MIFLIX الرسمي لمشاهدة وتحميل أحدث الأفلام والمسلسلات والأنمي مجاناً بأعلى جودة.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
