@@ -628,7 +628,7 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
   const [isMiflixOriginal, setIsMiflixOriginal] = useState(initialItem?.isMiflixOriginal || false);
   const [downloadUrl, setDownloadUrl] = useState(initialItem?.downloadUrl || '');
 
-  // Auto Generate High-Ranking SEO Keywords
+  // Auto Generate High-Ranking SEO Keywords (Focusing strictly on Latest Episode for Series)
   const handleAutoGenerateKeywords = () => {
     const movieTitle = title.trim();
     if (!movieTitle) {
@@ -636,21 +636,60 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
       return;
     }
     const isMovie = type === 'movie';
-    const prefix = isMovie ? 'فيلم' : 'مسلسل';
-    const generated = [
-      `مشاهدة ${prefix} ${movieTitle} مترجم كامل`,
-      `تحميل ${prefix} ${movieTitle} 1080p FHD`,
-      `ايجي بست ${movieTitle}`,
-      `ماي سيما ${movieTitle}`,
-      `قصة عشق ${movieTitle}`,
-      `فشار ${movieTitle}`,
-      `${movieTitle} بجودة عالية بدون إعلانات`,
-      `${movieTitle} سنة ${releaseYear}`
-    ];
-    if (originalTitle.trim()) {
-      generated.push(`Watch ${originalTitle.trim()} online HD`);
-      generated.push(`${originalTitle.trim()} full movie`);
+    let generated: string[] = [];
+
+    if (isMovie) {
+      generated = [
+        `مشاهدة فيلم ${movieTitle} مترجم كامل`,
+        `تحميل فيلم ${movieTitle} 1080p FHD`,
+        `ايجي بست ${movieTitle}`,
+        `ماي سيما ${movieTitle}`,
+        `فشار ${movieTitle}`,
+        `${movieTitle} بجودة عالية بدون إعلانات`,
+        `${movieTitle} سنة ${releaseYear}`
+      ];
+      if (originalTitle.trim()) {
+        generated.push(`Watch ${originalTitle.trim()} online HD`);
+        generated.push(`${originalTitle.trim()} full movie`);
+      }
+    } else {
+      // Find highest / latest episode across all seasons
+      let latestEp = 0;
+      let latestEpTitle = '';
+      let latestEpDesc = '';
+      for (const season of seasons) {
+        for (const ep of season.episodes) {
+          if ((ep.episodeNumber || 0) >= latestEp) {
+            latestEp = ep.episodeNumber || 0;
+            latestEpTitle = ep.title || '';
+            latestEpDesc = ep.description || '';
+          }
+        }
+      }
+      const epNum = latestEp > 0 ? latestEp : 1;
+
+      generated = [
+        `مسلسل ${movieTitle} الحلقة ${epNum}`,
+        `مشاهدة مسلسل ${movieTitle} الحلقة ${epNum} مترجمة كاملة`,
+        `تحميل مسلسل ${movieTitle} الحلقة ${epNum} 1080p`,
+        `${movieTitle} الحلقة ${epNum} قصة عشق`,
+        `${movieTitle} حلقة ${epNum} ايجي بست`,
+        `${movieTitle} حلقة ${epNum} ماي سيما`,
+        `${movieTitle} الحلقة ${epNum} بدون إعلانات`,
+        `الحلقة ${epNum} ${movieTitle}`
+      ];
+
+      if (latestEpTitle && !latestEpTitle.startsWith('الحلقة')) {
+        generated.push(`${movieTitle} ${latestEpTitle}`);
+      }
+
+      if (latestEpDesc.trim()) {
+        // Extract key search terms from latest episode description
+        const descWords = latestEpDesc.trim().split(/\s+/).slice(0, 10).join(' ');
+        generated.push(`${movieTitle} الحلقة ${epNum} ${descWords}`);
+      }
     }
+
     const currentList = keywordsInput
       ? keywordsInput.split(/[,،]/).map(s => s.trim()).filter(Boolean)
       : [];
@@ -711,9 +750,8 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
       ...movieServers,
       {
         id: `s-${Date.now()}-${newIdx}`,
-        name: `سيرفر ${newIdx} (سريع VIP)`,
+        name: newIdx === 1 ? 'سيرفر VIP' : `سيرفر ${newIdx - 1}`,
         url: '',
-        quality: '1080p FHD',
         type: 'direct'
       }
     ]);
@@ -830,13 +868,11 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
       id: `ep-${Date.now()}-${epNum}`,
       episodeNumber: epNum,
       title: `الحلقة ${epNum}`,
-      duration: '45 دقيقة',
       servers: [
         {
           id: `s1-${Date.now()}`,
-          name: 'سيرفر 1 (سريع VIP)',
+          name: 'سيرفر VIP',
           url: '',
-          quality: '1080p FHD',
           type: 'embed'
         }
       ]
@@ -886,10 +922,9 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
     const sNum = ep.servers.length + 1;
     ep.servers.push({
       id: `srv-${Date.now()}-${sNum}`,
-      name: `سيرفر ${sNum} (FHD)`,
-      url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-      quality: '1080p',
-      type: 'direct'
+      name: sNum === 1 ? 'سيرفر VIP' : `سيرفر ${sNum - 1}`,
+      url: '',
+      type: 'embed'
     });
     setSeasons(copy);
   };
@@ -929,7 +964,7 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
       categoryId,
       synopsis: synopsis.trim() || 'لا يوجد وصف متوفر.',
       posterUrl: normalizeImageUrl(posterUrl.trim()) || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=600',
-      backdropUrl: normalizeImageUrl(backdropUrl.trim()) || normalizeImageUrl(posterUrl.trim()) || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1200',
+      backdropUrl: normalizeImageUrl(posterUrl.trim()) || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1200',
       releaseYear: releaseYear ? Number(releaseYear) : new Date().getFullYear(),
       rating: rating !== '' && !isNaN(Number(rating)) ? Number(rating) : undefined,
       ageRating: ageRating.trim() || undefined,
@@ -1223,87 +1258,45 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
                   </button>
                 </div>
 
-                {/* Poster & Backdrop URLs with Live Preview and Smart Format Assistant */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="block text-xs font-bold text-slate-300">
-                      رابط البوستر العمودي (Poster URL)
-                    </label>
-                    <input
-                      type="text"
-                      value={posterUrl}
-                      onChange={(e) => setPosterUrl(e.target.value)}
-                      placeholder="https://..."
-                      dir="ltr"
-                      className="w-full bg-[#141f2e] border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-2 text-xs text-white font-mono outline-none"
-                    />
-                    {isHtmlViewerImageUrl(posterUrl).isViewer && (
-                      <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-300 space-y-1">
-                        <div className="flex items-center gap-1.5 font-bold">
-                          <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                          <span>تنبيه رابط صفحة ImgBB وليس رابط مباشر للصورة!</span>
-                        </div>
-                        <p className="text-slate-300 leading-relaxed">
-                          الرابط الذي نسخته هو صفحة ويب (<code className="text-amber-200">ibb.co/...</code>). للحصول على الرابط المباشر: افتح الصورة في تبويب جديد أو اضغط كليك يمين / لمسة مطولة عليها واختر <strong className="text-white">"نسخ عنوان الصورة" (Copy Image Address)</strong> بحيث يبدأ بـ <code className="text-cyan-300">https://i.ibb.co/...</code>
-                        </p>
+                {/* Poster URL with Live Preview and Smart Format Assistant (No confusing backdrop field) */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-slate-300">
+                    رابط البوستر (Poster URL) *
+                  </label>
+                  <input
+                    type="text"
+                    value={posterUrl}
+                    onChange={(e) => setPosterUrl(e.target.value)}
+                    placeholder="https://..."
+                    dir="ltr"
+                    className="w-full bg-[#141f2e] border border-slate-700 focus:border-cyan-400 rounded-xl px-3.5 py-2.5 text-xs text-white font-mono outline-none"
+                  />
+                  {isHtmlViewerImageUrl(posterUrl).isViewer && (
+                    <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-300 space-y-1">
+                      <div className="flex items-center gap-1.5 font-bold">
+                        <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                        <span>تنبيه رابط صفحة ImgBB وليس رابط مباشر للصورة!</span>
                       </div>
-                    )}
-                    {posterUrl && !isHtmlViewerImageUrl(posterUrl).isViewer && (
-                      <div className="flex items-center gap-2 pt-1">
-                        <img 
-                          src={normalizeImageUrl(posterUrl)} 
-                          alt="معاينة البوستر" 
-                          className="w-10 h-14 object-cover rounded-lg border border-slate-700 shadow-sm"
-                          onError={(e) => {
-                            (e.target as HTMLElement).style.display = 'none';
-                          }}
-                        />
-                        <span className="text-[11px] text-emerald-400 flex items-center gap-1">
-                          <Check className="w-3 h-3" /> تم التعرف على رابط البوستر بنجاح
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="block text-xs font-bold text-slate-300">
-                      رابط الخلفية العريضة (Backdrop URL)
-                    </label>
-                    <input
-                      type="text"
-                      value={backdropUrl}
-                      onChange={(e) => setBackdropUrl(e.target.value)}
-                      placeholder="https://..."
-                      dir="ltr"
-                      className="w-full bg-[#141f2e] border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-2 text-xs text-white font-mono outline-none"
-                    />
-                    {isHtmlViewerImageUrl(backdropUrl).isViewer && (
-                      <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-300 space-y-1">
-                        <div className="flex items-center gap-1.5 font-bold">
-                          <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                          <span>تنبيه رابط صفحة ImgBB وليس رابط صورة مباشر!</span>
-                        </div>
-                        <p className="text-slate-300 leading-relaxed">
-                          انسخ عنوان الصورة المباشر من ImgBB بحيث يبدأ بـ <code className="text-cyan-300">https://i.ibb.co/...</code>
-                        </p>
-                      </div>
-                    )}
-                    {backdropUrl && !isHtmlViewerImageUrl(backdropUrl).isViewer && (
-                      <div className="flex items-center gap-2 pt-1">
-                        <img 
-                          src={normalizeImageUrl(backdropUrl)} 
-                          alt="معاينة الخلفية" 
-                          className="w-16 h-10 object-cover rounded-lg border border-slate-700 shadow-sm"
-                          onError={(e) => {
-                            (e.target as HTMLElement).style.display = 'none';
-                          }}
-                        />
-                        <span className="text-[11px] text-emerald-400 flex items-center gap-1">
-                          <Check className="w-3 h-3" /> تم التعرف على رابط الخلفية
-                        </span>
-                      </div>
-                    )}
-                  </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        الرابط الذي نسخته هو صفحة ويب (<code className="text-amber-200">ibb.co/...</code>). للحصول على الرابط المباشر: افتح الصورة في تبويب جديد أو اضغط كليك يمين / لمسة مطولة عليها واختر <strong className="text-white">"نسخ عنوان الصورة" (Copy Image Address)</strong> بحيث يبدأ بـ <code className="text-cyan-300">https://i.ibb.co/...</code>
+                      </p>
+                    </div>
+                  )}
+                  {posterUrl && !isHtmlViewerImageUrl(posterUrl).isViewer && (
+                    <div className="flex items-center gap-2 pt-1">
+                      <img 
+                        src={normalizeImageUrl(posterUrl)} 
+                        alt="معاينة البوستر" 
+                        className="w-12 h-16 object-cover rounded-lg border border-slate-700 shadow-sm"
+                        onError={(e) => {
+                          (e.target as HTMLElement).style.display = 'none';
+                        }}
+                      />
+                      <span className="text-[11px] text-emerald-400 flex items-center gap-1">
+                        <Check className="w-3.5 h-3.5" /> تم التعرف على رابط البوستر بنجاح
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Synopsis */}
@@ -1541,84 +1534,52 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
                     </div>
 
                     <div className="space-y-3">
-                      {movieServers.map((server, sIdx) => (
-                        <div
-                          key={server.id || sIdx}
-                          className="p-4 rounded-2xl bg-[#141f2e] border border-slate-800 hover:border-slate-700 space-y-3 transition-all"
-                        >
-                          <div className="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
-                            <span className="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
-                              <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                              <span>سيرفر رقم {sIdx + 1}</span>
-                            </span>
+                      {movieServers.map((server, sIdx) => {
+                        const isVip = sIdx === 0;
+                        const label = isVip ? 'سيرفر VIP الذهبي' : `سيرفر رقم ${sIdx}`;
 
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveMovieServer(sIdx)}
-                              className="p-1 rounded-lg text-rose-400 hover:text-rose-300 hover:bg-rose-950/50 transition-colors"
-                              title="حذف السيرفر"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
+                        return (
+                          <div
+                            key={server.id || sIdx}
+                            className={`p-3.5 rounded-2xl border transition-all ${
+                              isVip 
+                                ? 'bg-amber-950/20 border-amber-500/40' 
+                                : 'bg-[#141f2e] border-slate-800'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between gap-2 mb-2">
+                              <span className={`text-xs font-black flex items-center gap-1.5 ${
+                                isVip ? 'text-amber-400' : 'text-cyan-300'
+                              }`}>
+                                <span className={`w-2 h-2 rounded-full ${isVip ? 'bg-amber-400' : 'bg-cyan-400'}`} />
+                                <span>{label}</span>
+                              </span>
 
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                              {movieServers.length > 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveMovieServer(sIdx)}
+                                  className="p-1 rounded-lg text-rose-400 hover:text-rose-300 hover:bg-rose-950/50 transition-colors"
+                                  title="حذف السيرفر"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                            </div>
+
                             <div>
-                              <label className="block text-[11px] font-semibold text-slate-300 mb-1">
-                                اسم السيرفر (يظهر للمشاهد)
-                              </label>
                               <input
                                 type="text"
-                                value={server.name}
-                                onChange={(e) => handleUpdateMovieServer(sIdx, 'name', e.target.value)}
-                                placeholder="سيرفر 1 (سريع VIP)"
-                                className="w-full bg-[#0c1420] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                                value={server.url}
+                                onChange={(e) => handleUpdateMovieServer(sIdx, 'url', e.target.value)}
+                                placeholder="ضع رابط سيرفر المشاهدة هنا (vidspeed, anafast, dood, mp4, iframe...)"
+                                dir="ltr"
+                                className="w-full bg-[#0c1420] border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-2 text-xs text-white font-mono outline-none"
                               />
                             </div>
-
-                            <div>
-                              <label className="block text-[11px] font-semibold text-slate-300 mb-1">
-                                الجودة المتاحة
-                              </label>
-                              <input
-                                type="text"
-                                value={server.quality || ''}
-                                onChange={(e) => handleUpdateMovieServer(sIdx, 'quality', e.target.value)}
-                                placeholder="1080p FHD أو 4K UHD"
-                                className="w-full bg-[#0c1420] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-mono outline-none"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="block text-[11px] font-semibold text-slate-300 mb-1">
-                                نوع الرابط
-                              </label>
-                              <select
-                                value={server.type || 'direct'}
-                                onChange={(e) => handleUpdateMovieServer(sIdx, 'type', e.target.value as 'embed' | 'direct')}
-                                className="w-full bg-[#0c1420] border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white outline-none"
-                              >
-                                <option value="direct">فيديو مباشر (MP4 / HLS / M3U8)</option>
-                                <option value="embed">تضمين خارجي (iframe Embed)</option>
-                              </select>
-                            </div>
                           </div>
-
-                          <div>
-                            <label className="block text-[11px] font-semibold text-slate-300 mb-1">
-                              رابط السيرفر (URL)
-                            </label>
-                            <input
-                              type="text"
-                              value={server.url}
-                              onChange={(e) => handleUpdateMovieServer(sIdx, 'url', e.target.value)}
-                              placeholder="https://..."
-                              dir="ltr"
-                              className="w-full bg-[#0c1420] border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-2 text-xs text-white font-mono outline-none"
-                            />
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
 
                     {/* Optional Movie Direct Download Link */}
@@ -1796,18 +1757,6 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
                                     placeholder="عنوان الحلقة (مثلاً: الحلقة 18)"
                                     className="bg-[#0c1420] border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-1.5 text-xs text-white flex-1 min-w-[140px]"
                                   />
-
-                                  <input
-                                    type="text"
-                                    value={ep.duration || ''}
-                                    onChange={(e) => {
-                                      const copy = [...seasons];
-                                      copy[selectedSeasonIdx].episodes[epIdx].duration = e.target.value;
-                                      setSeasons(copy);
-                                    }}
-                                    placeholder="المدة (مثلاً: 45 دقيقة)"
-                                    className="bg-[#0c1420] border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white w-28 hidden sm:block font-mono"
-                                  />
                                 </div>
 
                                 <div className="flex items-center justify-end gap-2">
@@ -1831,10 +1780,28 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
                                 </div>
                               </div>
 
+                              {/* Episode Description Field (للمساعدة في الظهور وبحث جوجل والموقع) */}
+                              <div className="space-y-1">
+                                <label className="block text-[11px] font-semibold text-slate-400">
+                                  وصف مختصر لأحداث الحلقة (يساعد بقوة في تصدر بحث جوجل وظهور الحلقة للزوار):
+                                </label>
+                                <textarea
+                                  rows={2}
+                                  value={ep.description || ''}
+                                  onChange={(e) => {
+                                    const copy = [...seasons];
+                                    copy[selectedSeasonIdx].episodes[epIdx].description = e.target.value;
+                                    setSeasons(copy);
+                                  }}
+                                  placeholder="اكتب نبذة أو ملخص تشويقي لأحداث هذه الحلقة للظهور في محركات البحث..."
+                                  className="w-full bg-[#0c1420] border border-slate-700/80 focus:border-cyan-400 rounded-xl p-2.5 text-xs text-white outline-none leading-relaxed"
+                                />
+                              </div>
+
                               {/* Episode Servers List */}
                               <div className="space-y-2 pr-2 border-r-2 border-cyan-700/60">
                                 {/* Optional Episode Direct Download Link */}
-                                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 bg-[#0c1420] p-2 rounded-xl border border-emerald-900/60">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 bg-[#0c1420] p-2.5 rounded-xl border border-emerald-900/60">
                                   <span className="text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded flex items-center gap-1 shrink-0">
                                     <Download className="w-3 h-3" />
                                     <span>رابط تحميل الحلقة (اختياري):</span>
@@ -1853,60 +1820,49 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
                                   />
                                 </div>
 
-                                {ep.servers.map((srv, srvIdx) => (
-                                  <div key={srv.id || srvIdx} className="flex flex-col sm:flex-row items-center gap-2 bg-[#0c1420] p-2.5 rounded-xl border border-slate-800">
-                                    <div className="flex items-center gap-1.5 w-full sm:w-auto">
-                                      <span className="text-[10px] text-cyan-400 font-mono font-bold bg-cyan-950/70 border border-cyan-800/80 px-2 py-1 rounded-lg">
-                                        سيرفر #{srvIdx + 1}
+                                {ep.servers.map((srv, srvIdx) => {
+                                  const isVip = srvIdx === 0;
+                                  const label = isVip ? 'سيرفر VIP الذهبي' : `سيرفر رقم ${srvIdx}`;
+
+                                  return (
+                                    <div 
+                                      key={srv.id || srvIdx} 
+                                      className={`flex flex-col sm:flex-row items-center gap-2 p-2.5 rounded-xl border ${
+                                        isVip ? 'bg-amber-950/20 border-amber-500/40' : 'bg-[#0c1420] border-slate-800'
+                                      }`}
+                                    >
+                                      <span className={`text-[10px] font-black px-2 py-1 rounded-lg shrink-0 ${
+                                        isVip ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50' : 'bg-cyan-950/70 text-cyan-400 border border-cyan-800/80'
+                                      }`}>
+                                        {label}
                                       </span>
+
                                       <input
                                         type="text"
-                                        value={srv.name}
+                                        value={srv.url}
                                         onChange={(e) => {
                                           const copy = [...seasons];
-                                          copy[selectedSeasonIdx].episodes[epIdx].servers[srvIdx].name = e.target.value;
+                                          copy[selectedSeasonIdx].episodes[epIdx].servers[srvIdx].url = e.target.value;
                                           setSeasons(copy);
                                         }}
-                                        placeholder="اسم السيرفر"
-                                        className="flex-1 sm:w-32 bg-[#141f2e] border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white"
+                                        placeholder="رابط البث أو كود التضمين (vidspeed, anafast, dood, mp4, iframe...)"
+                                        dir="ltr"
+                                        className="flex-1 w-full bg-[#141f2e] border border-slate-700 focus:border-cyan-400 rounded-lg px-2.5 py-1 text-xs text-white font-mono outline-none"
                                       />
+
+                                      {ep.servers.length > 1 && (
+                                        <button
+                                          type="button"
+                                          onClick={() => handleRemoveEpisodeServer(epIdx, srvIdx)}
+                                          className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-950/30 transition-colors self-end sm:self-center"
+                                          title="حذف هذا السيرفر"
+                                        >
+                                          <Trash2 className="w-3.5 h-3.5" />
+                                        </button>
+                                      )}
                                     </div>
-
-                                    <input
-                                      type="text"
-                                      value={srv.quality || ''}
-                                      onChange={(e) => {
-                                        const copy = [...seasons];
-                                        copy[selectedSeasonIdx].episodes[epIdx].servers[srvIdx].quality = e.target.value;
-                                        setSeasons(copy);
-                                      }}
-                                      placeholder="الجودة (1080p)"
-                                      className="w-full sm:w-20 bg-[#141f2e] border border-slate-700 rounded-lg px-2 py-1 text-xs text-white font-mono"
-                                    />
-
-                                    <input
-                                      type="text"
-                                      value={srv.url}
-                                      onChange={(e) => {
-                                        const copy = [...seasons];
-                                        copy[selectedSeasonIdx].episodes[epIdx].servers[srvIdx].url = e.target.value;
-                                        setSeasons(copy);
-                                      }}
-                                      placeholder="رابط البث أو كود التضمين (vidspeed, anafast, iframe...)"
-                                      dir="ltr"
-                                      className="flex-1 w-full bg-[#141f2e] border border-slate-700 focus:border-cyan-400 rounded-lg px-2.5 py-1 text-xs text-white font-mono outline-none"
-                                    />
-
-                                    <button
-                                      type="button"
-                                      onClick={() => handleRemoveEpisodeServer(epIdx, srvIdx)}
-                                      className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-950/30 transition-colors self-end sm:self-center"
-                                      title="حذف هذا السيرفر"
-                                    >
-                                      <X className="w-4 h-4" />
-                                    </button>
-                                  </div>
-                                ))}
+                                  );
+                                })}
                               </div>
                             </div>
                           ))}

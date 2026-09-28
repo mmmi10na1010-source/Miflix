@@ -168,9 +168,18 @@ export default function App() {
         // Check if query matches series episode directly
         const matchesLatestEp = latestEpQueries.some(term => term.includes(q) || q.includes(term));
 
+        // Check if query matches any episode description or title
+        const matchesEpisodeDesc = item.type === 'series' && item.seasons?.some(s => 
+          s.episodes?.some(ep => 
+            (ep.description && ep.description.toLowerCase().includes(q)) ||
+            (ep.title && ep.title.toLowerCase().includes(q))
+          )
+        );
+
         return (
           item.title.toLowerCase().includes(q) ||
           matchesLatestEp ||
+          matchesEpisodeDesc ||
           (item.originalTitle && item.originalTitle.toLowerCase().includes(q)) ||
           item.genres.some(g => g.toLowerCase().includes(q)) ||
           item.synopsis.toLowerCase().includes(q) ||

@@ -200,7 +200,7 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
               )}
               {currentServer && (
                 <span className="text-slate-400 font-mono">
-                  {selectedServerIndex === 0 ? 'سيرفر VIP' : selectedServerIndex === 1 ? 'سيرفر MI' : `سيرفر ${selectedServerIndex + 1}`}
+                  {selectedServerIndex === 0 ? 'سيرفر VIP' : `سيرفر ${selectedServerIndex}`}
                 </span>
               )}
             </div>
@@ -318,23 +318,16 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
               )}
             </div>
 
-            {/* Seamless Server Chips: VIP, MI, 3, 4, 5... and Download */}
+            {/* Seamless Server Chips: VIP Golden, 1, 2, 3... Blue, and Download */}
             <div className="flex flex-wrap items-center gap-2">
               {availableServers.map((server, idx) => {
                 const isActive = selectedServerIndex === idx;
+                const isVip = idx === 0;
 
                 // Naming logic:
-                // Server 0 -> VIP
-                // Server 1 -> MI
-                // Server 2+ -> 3, 4, 5...
-                let label = '';
-                if (idx === 0) {
-                  label = 'سيرفر VIP';
-                } else if (idx === 1) {
-                  label = 'سيرفر MI';
-                } else {
-                  label = `سيرفر ${idx + 1}`;
-                }
+                // Server 0 -> سيرفر VIP
+                // Server 1+ -> سيرفر 1, سيرفر 2, سيرفر 3...
+                const label = isVip ? 'سيرفر VIP' : `سيرفر ${idx}`;
 
                 return (
                   <button
@@ -342,17 +335,17 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
                     onClick={() => handleServerSwitch(idx)}
                     title={server.name || label}
                     className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border text-xs font-black transition-all duration-200 active:scale-95 ${
-                      isActive 
-                        ? 'bg-[#00a8e1] border-cyan-300 text-black shadow-[0_0_14px_rgba(0,168,225,0.5)] scale-105'
-                        : 'bg-[#141f2e] border-slate-700 text-slate-200 hover:border-cyan-400 hover:text-white'
+                      isVip
+                        ? isActive
+                          ? 'bg-amber-400 border-amber-300 text-black shadow-[0_0_16px_rgba(251,191,36,0.6)] scale-105'
+                          : 'bg-amber-950/40 border-amber-600/70 text-amber-300 hover:border-amber-400 hover:bg-amber-900/50'
+                        : isActive
+                          ? 'bg-[#00a8e1] border-cyan-300 text-black shadow-[0_0_16px_rgba(0,168,225,0.6)] scale-105'
+                          : 'bg-blue-950/50 border-blue-600/70 text-blue-200 hover:border-cyan-400 hover:text-white hover:bg-blue-900/60'
                     }`}
                   >
+                    {isVip && <Zap className="w-3.5 h-3.5 text-amber-400 fill-current shrink-0" />}
                     <span>{label}</span>
-                    {server.quality && (
-                      <span className={`text-[10px] px-1 py-0.2 rounded font-mono ${isActive ? 'bg-black/20 text-black' : 'bg-black/50 text-slate-400'}`}>
-                        {server.quality}
-                      </span>
-                    )}
                   </button>
                 );
               })}
