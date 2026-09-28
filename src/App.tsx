@@ -28,6 +28,7 @@ import { Top10Row } from './components/Top10Row';
 import { MediaCard } from './components/MediaCard';
 import { MediaDetailsModal } from './components/MediaDetailsModal';
 import { VideoPlayerModal } from './components/VideoPlayerModal';
+import { getLatestEpisodeNumber } from './utils/imageHelper';
 import { AdminLoginModal } from './components/AdminLoginModal';
 import { AdminDashboard } from './components/AdminDashboard';
 import { MiflixIntroModal } from './components/MiflixIntroModal';
@@ -150,13 +151,32 @@ export default function App() {
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
-      return result.filter(item => 
-        item.title.toLowerCase().includes(q) ||
-        (item.originalTitle && item.originalTitle.toLowerCase().includes(q)) ||
-        item.genres.some(g => g.toLowerCase().includes(q)) ||
-        item.synopsis.toLowerCase().includes(q) ||
-        (item.keywords && item.keywords.some(k => k.toLowerCase().includes(q)))
-      );
+      return result.filter(item => {
+        const latestEp = getLatestEpisodeNumber(item);
+        const latestEpQueries = latestEp !== null ? [
+          `الحلقة ${latestEp}`,
+          `الحلقه ${latestEp}`,
+          `حلقة ${latestEp}`,
+          `حلقه ${latestEp}`,
+          `الحلقة${latestEp}`,
+          `حلقة${latestEp}`,
+          `${item.title} ${latestEp}`,
+          `${item.title} الحلقة ${latestEp}`,
+          `${item.title} الحلقه ${latestEp}`
+        ].map(s => s.toLowerCase()) : [];
+
+        // Check if query matches series episode directly
+        const matchesLatestEp = latestEpQueries.some(term => term.includes(q) || q.includes(term));
+
+        return (
+          item.title.toLowerCase().includes(q) ||
+          matchesLatestEp ||
+          (item.originalTitle && item.originalTitle.toLowerCase().includes(q)) ||
+          item.genres.some(g => g.toLowerCase().includes(q)) ||
+          item.synopsis.toLowerCase().includes(q) ||
+          (item.keywords && item.keywords.some(k => k.toLowerCase().includes(q)))
+        );
+      });
     }
 
     if (activeTab === 'turkish') {

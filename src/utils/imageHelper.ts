@@ -46,3 +46,23 @@ export function isHtmlViewerImageUrl(url: string): { isViewer: boolean; reason?:
 
   return { isViewer: false };
 }
+
+/**
+ * Returns the latest episode number for a series (highest episode number across all seasons)
+ */
+export function getLatestEpisodeNumber(item: { type: string; seasons?: { episodes?: { episodeNumber?: number }[] }[] }): number | null {
+  if (item.type !== 'series' || !item.seasons || item.seasons.length === 0) {
+    return null;
+  }
+  let maxEp = 0;
+  for (const season of item.seasons) {
+    if (season.episodes && season.episodes.length > 0) {
+      for (const ep of season.episodes) {
+        if (typeof ep.episodeNumber === 'number' && ep.episodeNumber > maxEp) {
+          maxEp = ep.episodeNumber;
+        }
+      }
+    }
+  }
+  return maxEp > 0 ? maxEp : null;
+}

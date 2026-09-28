@@ -80,7 +80,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Search className="w-4 h-4 text-cyan-400 ml-2 shrink-0" />
                 <input
                   type="text"
-                  placeholder="ابحث عن فيلم، مسلسل، أنمي..."
+                  placeholder="ابحث باسم العمل أو رقم الحلقة (مثال: حلقة 18)..."
                   value={searchQuery}
                   onChange={(e) => onSearchChange(e.target.value)}
                   autoFocus

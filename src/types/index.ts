@@ -56,6 +56,7 @@ export interface Episode {
   thumbnail?: string;
   views?: number;
   servers: ServerSource[];
+  downloadUrl?: string; // Optional download server link
 }
 
 export interface Season {
@@ -87,6 +88,7 @@ export interface MediaItem {
   isMiflixOriginal?: boolean;
   keywords?: string[]; // SEO tags & keywords for Google & internal search
   servers?: ServerSource[]; // For movies
+  downloadUrl?: string; // Optional direct download server link
   seasons?: Season[]; // For TV series
   createdAt: string;
 }

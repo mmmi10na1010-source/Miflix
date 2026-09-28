@@ -626,6 +626,7 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
   const [keywordsInput, setKeywordsInput] = useState(initialItem?.keywords?.join('، ') || '');
   const [isFeatured, setIsFeatured] = useState(initialItem?.isFeatured || false);
   const [isMiflixOriginal, setIsMiflixOriginal] = useState(initialItem?.isMiflixOriginal || false);
+  const [downloadUrl, setDownloadUrl] = useState(initialItem?.downloadUrl || '');
 
   // Auto Generate High-Ranking SEO Keywords
   const handleAutoGenerateKeywords = () => {
@@ -938,6 +939,7 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
       isFeatured,
       views: initialItem?.views || 0,
       isMiflixOriginal,
+      downloadUrl: downloadUrl.trim() || undefined,
       servers: type === 'movie' ? movieServers : undefined,
       seasons: type === 'series' ? seasons : undefined,
       createdAt: initialItem?.createdAt || new Date().toISOString().slice(0, 10)
@@ -1441,7 +1443,16 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
                       <span className="text-[11px] text-slate-500">https://maiflix.mmmi10na1010.workers.dev</span>
                     </div>
                     <h5 className="text-base text-[#8ab4f8] hover:underline cursor-pointer font-medium leading-snug">
-                      {title.trim() ? `مشاهدة وتحميل ${type === 'movie' ? 'فيلم' : 'مسلسل'} ${title.trim()} مترجم HD 1080p - MIFLIX` : 'مشاهدة وتحميل أحدث الأفلام والمسلسلات بجودة عالية - MIFLIX'}
+                      {title.trim() ? (
+                        type === 'series' ? (() => {
+                          const maxEp = seasons.reduce((acc, s) => {
+                            const epMax = s.episodes.reduce((m, e) => Math.max(m, e.episodeNumber || 0), 0);
+                            return Math.max(acc, epMax);
+                          }, 0);
+                          const epPart = maxEp > 0 ? ` الحلقة ${maxEp}` : '';
+                          return `مشاهدة وتحميل مسلسل ${title.trim()}${epPart} مترجم كامل HD 1080p - MIFLIX`;
+                        })() : `مشاهدة وتحميل فيلم ${title.trim()} مترجم HD 1080p - MIFLIX`
+                      ) : 'مشاهدة وتحميل أحدث الأفلام والمسلسلات بجودة عالية - MIFLIX'}
                     </h5>
                     <p className="text-xs text-[#bdc1c6] leading-relaxed line-clamp-2">
                       {synopsis.trim() ? synopsis.trim() : `شاهد الآن بجودة عالية وبدون تقطيع أحدث الأفلام والمسلسلات مع سيرفرات متعددة وسريعة على منصة MIFLIX العربية.`}
@@ -1608,6 +1619,22 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
                           </div>
                         </div>
                       ))}
+                    </div>
+
+                    {/* Optional Movie Direct Download Link */}
+                    <div className="mt-4 p-4 rounded-2xl bg-emerald-950/20 border border-emerald-500/30 space-y-1.5">
+                      <label className="block text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+                        <Download className="w-4 h-4 text-emerald-400" />
+                        <span>رابط تحميل الفيلم المباشر (اختياري - لن يظهر للجمهور إلا إذا قمت بوضعه هنا)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={downloadUrl}
+                        onChange={(e) => setDownloadUrl(e.target.value)}
+                        placeholder="https://... (اتركه فارغاً إذا كنت لا تريد إظهار زر تحميل للجمهور)"
+                        dir="ltr"
+                        className="w-full bg-[#0c1420] border border-emerald-700/50 focus:border-emerald-400 rounded-xl px-3 py-2 text-xs text-white font-mono outline-none"
+                      />
                     </div>
                   </div>
                 ) : (
@@ -1806,6 +1833,26 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
 
                               {/* Episode Servers List */}
                               <div className="space-y-2 pr-2 border-r-2 border-cyan-700/60">
+                                {/* Optional Episode Direct Download Link */}
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 bg-[#0c1420] p-2 rounded-xl border border-emerald-900/60">
+                                  <span className="text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded flex items-center gap-1 shrink-0">
+                                    <Download className="w-3 h-3" />
+                                    <span>رابط تحميل الحلقة (اختياري):</span>
+                                  </span>
+                                  <input
+                                    type="text"
+                                    value={ep.downloadUrl || ''}
+                                    onChange={(e) => {
+                                      const copy = [...seasons];
+                                      copy[selectedSeasonIdx].episodes[epIdx].downloadUrl = e.target.value;
+                                      setSeasons(copy);
+                                    }}
+                                    placeholder="https://... (اتركه فارغاً إذا كنت لا تريد إظهار زر تحميل لهذه الحلقة)"
+                                    dir="ltr"
+                                    className="flex-1 w-full bg-[#141f2e] border border-slate-700 focus:border-emerald-400 rounded-lg px-2.5 py-1 text-xs text-white font-mono outline-none"
+                                  />
+                                </div>
+
                                 {ep.servers.map((srv, srvIdx) => (
                                   <div key={srv.id || srvIdx} className="flex flex-col sm:flex-row items-center gap-2 bg-[#0c1420] p-2.5 rounded-xl border border-slate-800">
                                     <div className="flex items-center gap-1.5 w-full sm:w-auto">
