@@ -17,7 +17,8 @@ import {
   toggleMyList,
   isAdminLoggedIn,
   logoutAdmin,
-  recordMediaView
+  recordMediaView,
+  subscribeToGlobalMediaCatalog
 } from './services/storage';
 
 import { Navbar } from './components/Navbar';
@@ -88,6 +89,18 @@ export default function App() {
       console.warn('Ad script injection notice:', e);
     }
   }, [adSettings]);
+
+  // Synchronize catalog with Cloud database across all users worldwide
+  useEffect(() => {
+    const unsubscribe = subscribeToGlobalMediaCatalog((cloudItems) => {
+      if (cloudItems && cloudItems.length > 0) {
+        setMediaItems(cloudItems);
+      }
+    });
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
+  }, []);
 
   // Read URL query params on initial load for direct indexing (?watch=id or ?search=query or ?tab=tab)
   useEffect(() => {

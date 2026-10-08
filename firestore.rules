@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Anyone can read catalog media items and public site settings
+    match /media_items/{itemId} {
+      allow read: if true;
+      allow write: if true; // Managed via Admin dashboard in MIFLIX
+    }
+
+    match /site_settings/{settingId} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}
