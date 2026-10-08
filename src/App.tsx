@@ -495,10 +495,10 @@ export default function App() {
                   setIsAdminLoginOpen(true);
                 }
               }}
-              className="hover:text-cyan-400 transition-colors flex items-center gap-1 font-medium"
+              className="px-3 py-1 rounded-full bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-500/30 hover:border-cyan-400 text-cyan-300 hover:text-white transition-all flex items-center gap-1.5 font-semibold text-[11px] shadow-sm hover:shadow-[0_0_12px_rgba(6,182,212,0.3)]"
             >
               <Shield className="w-3.5 h-3.5 text-cyan-400" />
-              <span>{isAdmin ? 'لوحة تحكم المشرف' : 'تسجيل دخول المشرف (miflix)'}</span>
+              <span>{isAdmin ? 'لوحة تحكم المشرف' : 'لوحة التحكم الإدارية (miflix)'}</span>
             </button>
           </div>
         </div>

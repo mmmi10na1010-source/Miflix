@@ -112,11 +112,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex items-center gap-1.5">
               <button
                 onClick={onOpenAdminDashboard}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white text-xs font-semibold shadow-md transition-all whitespace-nowrap glow-prime"
+                className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-cyan-500/25 border border-cyan-400/40 transition-all hover:scale-105 whitespace-nowrap active:scale-95"
                 title="لوحة التحكم الإدارية"
               >
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
                 <Shield className="w-3.5 h-3.5 text-cyan-200" />
-                <span className="hidden sm:inline">لوحة الإدارة</span>
+                <span>لوحة تحكم MIFLIX</span>
               </button>
               <button
                 onClick={onAdminLogout}
@@ -129,11 +130,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           ) : (
             <button
               onClick={onOpenAdminLogin}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#141f2e] hover:bg-[#1a293c] border border-slate-700 hover:border-cyan-500/50 text-slate-300 hover:text-white text-xs font-medium transition-all whitespace-nowrap"
+              className="group flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500/15 to-cyan-500/15 hover:from-cyan-500/25 hover:to-blue-600/25 border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 hover:text-white text-xs font-bold transition-all hover:shadow-[0_0_15px_rgba(6,182,212,0.35)] hover:scale-105 active:scale-95 whitespace-nowrap"
               title="دخول المشرف (miflix)"
             >
-              <Shield className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="hidden sm:inline">دخول الإدارة</span>
+              <Shield className="w-3.5 h-3.5 text-amber-400 group-hover:text-cyan-300 transition-colors" />
+              <span>لوحة التحكم الإدارية ⚡</span>
             </button>
           )}
 
