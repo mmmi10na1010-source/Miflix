@@ -177,6 +177,11 @@ export default function App() {
   // Sync media items with storage
   const handleSaveItems = (newItems: MediaItem[]) => {
     setMediaItems(newItems);
+    try {
+      localStorage.setItem('miflix_media_catalog_v2', JSON.stringify(newItems));
+    } catch {
+      // ignore
+    }
   };
 
   const handleResetCatalog = () => {

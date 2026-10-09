@@ -126,7 +126,7 @@ export async function fetchGlobalMediaCatalog(): Promise<MediaItem[]> {
     if (!snapshot.empty) {
       const items: MediaItem[] = [];
       snapshot.forEach(docSnap => {
-        const item = normalizeMediaItem(docSnap.data());
+        const item = normalizeMediaItem({ id: docSnap.id, ...docSnap.data() });
         if (item) {
           items.push(item);
         }
@@ -160,30 +160,22 @@ export const subscribeToGlobalMediaCatalog = (
     const colRef = collection(db, 'media_items');
     return onSnapshot(colRef, (snapshot) => {
       onStatusChange?.('connected');
-      if (!snapshot.empty) {
-        const cloudItems: MediaItem[] = [];
-        snapshot.forEach((docSnap) => {
-          const item = normalizeMediaItem(docSnap.data());
-          if (item) {
-            cloudItems.push(item);
-          }
-        });
-        if (cloudItems.length > 0) {
-          // Sort newest items first
-          cloudItems.sort((a, b) => {
-            const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-            const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-            return dateB - dateA;
-          });
-          localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(cloudItems));
-          onUpdate(cloudItems);
+      const cloudItems: MediaItem[] = [];
+      snapshot.forEach((docSnap) => {
+        const item = normalizeMediaItem({ id: docSnap.id, ...docSnap.data() });
+        if (item) {
+          cloudItems.push(item);
         }
-      } else {
-        // If cloud database is empty initially, seed it with INITIAL_MEDIA_ITEMS
-        seedCloudCatalogWithDefaults().then(() => {
-          onUpdate(INITIAL_MEDIA_ITEMS);
-        });
-      }
+      });
+
+      cloudItems.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+      });
+
+      localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(cloudItems));
+      onUpdate(cloudItems);
     }, (error) => {
       console.warn('Firestore real-time subscription error, using local fallback:', error);
       onStatusChange?.('error', error.message);
