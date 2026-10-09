@@ -163,11 +163,37 @@ export default function App() {
 
     if (activeItem) {
       const isMovie = activeItem.type === 'movie';
+
+      // Calculate active episode number for series (latest episode or currently playing episode)
+      let currentEpNumber: number | null = null;
+      if (!isMovie) {
+        if (playingEpisodeId && activeItem.seasons) {
+          for (const s of activeItem.seasons) {
+            const found = s.episodes?.find(e => e.id === playingEpisodeId);
+            if (found && typeof found.episodeNumber === 'number') {
+              currentEpNumber = found.episodeNumber;
+              break;
+            }
+          }
+        }
+        if (currentEpNumber === null) {
+          currentEpNumber = getLatestEpisodeNumber(activeItem);
+        }
+      }
+
       const pageTitle = isMovie
         ? `مشاهدة فيلم ${activeItem.title} مترجم كامل HD اون لاين | MIFLIX مي فليكس`
-        : `مشاهدة مسلسل ${activeItem.title} كامل مترجم بجودة عالية FHD | MIFLIX مي فليكس`;
-      const metaDesc = `مشاهدة وتحميل ${activeItem.title} (${activeItem.releaseYear}) ${isMovie ? 'فيلم' : 'مسلسل'} ${activeItem.genres?.join('، ') || ''} بجودة 1080p FHD مع روابط وسيرفرات سريعة VIP بدون إعلانات مزعجة على مي فليكس.`;
-      const currentUrl = `${window.location.origin}${window.location.pathname}?watch=${activeItem.id}`;
+        : currentEpNumber
+          ? `مشاهدة مسلسل ${activeItem.title} الحلقة ${currentEpNumber} مترجمة HD اون لاين | MIFLIX مي فليكس`
+          : `مشاهدة مسلسل ${activeItem.title} كامل مترجم بجودة عالية FHD | MIFLIX مي فليكس`;
+
+      const metaDesc = isMovie
+        ? `مشاهدة وتحميل ${activeItem.title} (${activeItem.releaseYear}) فيلم ${activeItem.genres?.join('، ') || ''} بجودة 1080p FHD مع روابط وسيرفرات سريعة VIP بدون إعلانات مزعجة على مي فليكس.`
+        : currentEpNumber
+          ? `مشاهدة وتحميل مسلسل ${activeItem.title} الحلقة ${currentEpNumber} (${activeItem.releaseYear}) مترجمة كاملة بجودة عالية 1080p FHD مع سيرفرات مشاهدة سريعة VIP بدون تقطيع على مي فليكس.`
+          : `مشاهدة وتحميل مسلسل ${activeItem.title} (${activeItem.releaseYear}) كامل مترجم بجودة 1080p FHD مع سيرفرات مشاهدة مباشرة VIP على مي فليكس.`;
+
+      const currentUrl = `${window.location.origin}${window.location.pathname}?watch=${activeItem.id}${currentEpNumber ? `&ep=${currentEpNumber}` : ''}`;
       const posterImg = activeItem.posterUrl || activeItem.backdropUrl || 'https://maiflix.mmmi10na1010.workers.dev/logo.png';
 
       document.title = pageTitle;
@@ -183,9 +209,14 @@ export default function App() {
 
       const url = new URL(window.location.href);
       url.searchParams.set('watch', activeItem.id);
+      if (currentEpNumber) {
+        url.searchParams.set('ep', String(currentEpNumber));
+      } else {
+        url.searchParams.delete('ep');
+      }
       window.history.replaceState({}, '', url.toString());
 
-      // Rich Schema.org JSON-LD for Googlebot (Movie / TVSeries)
+      // Rich Schema.org JSON-LD for Googlebot (Movie / TVSeries / TVEpisode)
       let script = document.getElementById('miflix-schema-jsonld') as HTMLScriptElement | null;
       if (!script) {
         script = document.createElement('script');
@@ -195,10 +226,15 @@ export default function App() {
       }
       const schemaData = {
         '@context': 'https://schema.org',
-        '@type': isMovie ? 'Movie' : 'TVSeries',
-        'name': activeItem.title,
+        '@type': isMovie ? 'Movie' : (currentEpNumber ? 'TVEpisode' : 'TVSeries'),
+        'name': isMovie ? activeItem.title : (currentEpNumber ? `${activeItem.title} الحلقة ${currentEpNumber}` : activeItem.title),
         'alternateName': activeItem.originalTitle || undefined,
-        'headline': activeItem.title,
+        'headline': isMovie ? activeItem.title : (currentEpNumber ? `${activeItem.title} الحلقة ${currentEpNumber}` : activeItem.title),
+        'episodeNumber': currentEpNumber || undefined,
+        'partOfSeries': !isMovie ? {
+          '@type': 'TVSeries',
+          'name': activeItem.title
+        } : undefined,
         'image': posterImg,
         'description': activeItem.synopsis,
         'datePublished': `${activeItem.releaseYear}-01-01`,
@@ -231,10 +267,11 @@ export default function App() {
       const url = new URL(window.location.href);
       if (url.searchParams.has('watch')) {
         url.searchParams.delete('watch');
+        url.searchParams.delete('ep');
         window.history.replaceState({}, '', url.pathname + (url.searchParams.toString() ? `?${url.searchParams.toString()}` : ''));
       }
     }
-  }, [detailsMedia, playingMedia, searchQuery]);
+  }, [detailsMedia, playingMedia, playingEpisodeId, searchQuery]);
 
   // Featured Item for Hero Banner
   const featuredItem = useMemo(() => {
