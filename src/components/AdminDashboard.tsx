@@ -39,7 +39,13 @@ import {
   AdSettings
 } from '../types';
 import { AdsManagerModal } from './AdsManagerModal';
-import { getStoredAdSettings, saveAdSettings } from '../services/storage';
+import { 
+  getStoredAdSettings, 
+  saveAdSettings,
+  saveSingleMediaItemToCloud,
+  deleteMediaItemFromCloud,
+  saveMediaItems
+} from '../services/storage';
 import { normalizeImageUrl, isHtmlViewerImageUrl } from '../utils/imageHelper';
 
 interface AdminDashboardProps {
@@ -96,29 +102,39 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     });
 
   // Confirmed Delete
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (!itemToDelete) return;
     const deletedTitle = itemToDelete.title;
-    const updated = items.filter(i => i.id !== itemToDelete.id);
-    onSaveItems(updated);
-    setItemToDelete(null);
-    showToast(`تم حذف "${deletedTitle}" بنجاح نهائياً.`);
+    try {
+      await deleteMediaItemFromCloud(itemToDelete.id);
+      const updated = items.filter(i => i.id !== itemToDelete.id);
+      onSaveItems(updated);
+      setItemToDelete(null);
+      showToast(`تم حذف "${deletedTitle}" بنجاح من السحابة وجميع الأجهزة.`);
+    } catch (err: any) {
+      showToast(`خطأ أثناء الحذف من السحابة: ${err?.message || 'تعذر الحذف'}`);
+    }
   };
 
   // Save (Add or Update)
-  const handleSaveItem = (savedItem: MediaItem) => {
-    const exists = items.some(i => i.id === savedItem.id);
-    let updated: MediaItem[];
-    if (exists) {
-      updated = items.map(i => i.id === savedItem.id ? savedItem : i);
-      showToast('تم تحديث العمل والسيرفرات بنجاح.');
-    } else {
-      updated = [savedItem, ...items];
-      showToast('تمت إضافة العمل الجديد وسيرفراته بنجاح.');
+  const handleSaveItem = async (savedItem: MediaItem) => {
+    try {
+      await saveSingleMediaItemToCloud(savedItem);
+      const exists = items.some(i => i.id === savedItem.id);
+      let updated: MediaItem[];
+      if (exists) {
+        updated = items.map(i => i.id === savedItem.id ? savedItem : i);
+        showToast('تم تحديث العمل ومزامنته سحابياً بنجاح.');
+      } else {
+        updated = [savedItem, ...items];
+        showToast('تمت إضافة العمل ومزامنته سحابياً بنجاح.');
+      }
+      onSaveItems(updated);
+      setEditingItem(null);
+      setIsNewModalOpen(false);
+    } catch (err: any) {
+      showToast(`فشل الحفظ في السحابة: ${err?.message || 'خطأ غير متوقع'}`);
     }
-    onSaveItems(updated);
-    setEditingItem(null);
-    setIsNewModalOpen(false);
   };
 
   // Export JSON backup
@@ -136,17 +152,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     const fileReader = new FileReader();
     if (e.target.files && e.target.files[0]) {
       fileReader.readAsText(e.target.files[0], "UTF-8");
-      fileReader.onload = (event) => {
+      fileReader.onload = async (event) => {
         try {
           const parsed = JSON.parse(event.target?.result as string);
           if (Array.isArray(parsed)) {
+            await saveMediaItems(parsed);
             onSaveItems(parsed);
-            showToast('تم استيراد الكتالوج بنجاح.');
+            showToast('تم استيراد الكتالوج ومزامنته سحابياً بنجاح.');
           } else {
             showToast('خطأ: ملف النسخة الاحتياطية غير متطابق.');
           }
         } catch {
-          showToast('تعذر قراءة ملف JSON.');
+          showToast('تعذر قراءة ملف JSON أو الحفظ في السحابة.');
         }
       };
     }

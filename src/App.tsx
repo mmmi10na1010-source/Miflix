@@ -7,7 +7,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { 
   MediaItem, 
   CategoryId, 
-  CATEGORIES_ORDERED 
+  CATEGORIES_ORDERED,
+  AdSettings
 } from './types';
 import { 
   getStoredMediaItems, 
@@ -18,7 +19,10 @@ import {
   isAdminLoggedIn,
   logoutAdmin,
   recordMediaView,
-  subscribeToGlobalMediaCatalog
+  subscribeToGlobalMediaCatalog,
+  fetchGlobalMediaCatalog,
+  subscribeToAdSettings,
+  getStoredAdSettings
 } from './services/storage';
 
 import { Navbar } from './components/Navbar';
@@ -35,7 +39,6 @@ import { AdminDashboard } from './components/AdminDashboard';
 import { MiflixIntroModal } from './components/MiflixIntroModal';
 import { MiflixLogo } from './components/MiflixLogo';
 import { AdSlot } from './components/AdSlot';
-import { getStoredAdSettings } from './services/storage';
 
 import { 
   Film, 
@@ -64,7 +67,7 @@ export default function App() {
   const [isIntroOpen, setIsIntroOpen] = useState<boolean>(false);
 
   // Ad Settings
-  const adSettings = useMemo(() => getStoredAdSettings(), [isAdminDashboardOpen]);
+  const [adSettings, setAdSettings] = useState<AdSettings>(getStoredAdSettings);
 
   useEffect(() => {
     try {
@@ -90,15 +93,30 @@ export default function App() {
     }
   }, [adSettings]);
 
-  // Synchronize catalog with Cloud database across all users worldwide
+  // Synchronize catalog & settings with Cloud database across all users worldwide
   useEffect(() => {
-    const unsubscribe = subscribeToGlobalMediaCatalog((cloudItems) => {
+    // 1. Initial direct fetch from cloud
+    fetchGlobalMediaCatalog().then((items) => {
+      if (items && items.length > 0) {
+        setMediaItems(items);
+      }
+    });
+
+    // 2. Real-time live listener for catalog changes (adds, edits, deletes)
+    const unsubscribeCatalog = subscribeToGlobalMediaCatalog((cloudItems) => {
       if (cloudItems && cloudItems.length > 0) {
         setMediaItems(cloudItems);
       }
     });
+
+    // 3. Real-time ads listener
+    const unsubscribeAds = subscribeToAdSettings((newAds) => {
+      setAdSettings(newAds);
+    });
+
     return () => {
-      if (typeof unsubscribe === 'function') unsubscribe();
+      if (typeof unsubscribeCatalog === 'function') unsubscribeCatalog();
+      if (typeof unsubscribeAds === 'function') unsubscribeAds();
     };
   }, []);
 
@@ -159,7 +177,6 @@ export default function App() {
   // Sync media items with storage
   const handleSaveItems = (newItems: MediaItem[]) => {
     setMediaItems(newItems);
-    saveMediaItems(newItems);
   };
 
   const handleResetCatalog = () => {
