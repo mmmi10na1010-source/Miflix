@@ -31,9 +31,14 @@ export const MediaCard: React.FC<MediaCardProps> = ({
       className="group relative flex flex-col rounded-2xl overflow-hidden bg-[#0c1420] border border-slate-800/80 hover:border-cyan-400/70 transition-all duration-300 hover:shadow-[0_12px_32px_rgba(0,168,225,0.3)] hover:-translate-y-1.5"
     >
       {/* Netflix & Qissat Ishq Poster Canvas */}
-      <div 
-        onClick={() => onOpenDetails(item)}
-        className="relative aspect-[2/3] w-full overflow-hidden cursor-pointer bg-gradient-to-b from-[#111c2a] to-[#0a0f16]"
+      <a 
+        href={`?watch=${item.id}`}
+        onClick={(e) => {
+          e.preventDefault();
+          onOpenDetails(item);
+        }}
+        className="relative aspect-[2/3] w-full overflow-hidden cursor-pointer bg-gradient-to-b from-[#111c2a] to-[#0a0f16] block"
+        title={`مشاهدة ${item.title}`}
       >
         {!imgError && resolvedImage ? (
           <img
@@ -116,17 +121,23 @@ export const MediaCard: React.FC<MediaCardProps> = ({
       {/* Info Block Below Poster (Clean & Elegant) */}
       <div className="p-3 flex flex-col justify-between flex-1 bg-[#0c1420]">
         <div>
-          <h3 
-            onClick={() => onOpenDetails(item)}
-            className="text-xs sm:text-sm font-black text-white line-clamp-1 cursor-pointer hover:text-cyan-400 transition-colors"
-            title={item.title}
-          >
-            {item.title}
-            {item.type === 'series' && latestEpisodeNum !== null && (
-              <span className="text-red-400 font-normal mr-1.5 text-xs">
-                - الحلقة {latestEpisodeNum}
-              </span>
-            )}
+          <h3 className="text-xs sm:text-sm font-black line-clamp-1">
+            <a 
+              href={`?watch=${item.id}`}
+              onClick={(e) => {
+                e.preventDefault();
+                onOpenDetails(item);
+              }}
+              className="text-white hover:text-cyan-400 transition-colors cursor-pointer"
+              title={item.title}
+            >
+              {item.title}
+              {item.type === 'series' && latestEpisodeNum !== null && (
+                <span className="text-red-400 font-normal mr-1.5 text-xs">
+                  - الحلقة {latestEpisodeNum}
+                </span>
+              )}
+            </a>
           </h3>
 
           <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-400 mt-1 font-medium">
