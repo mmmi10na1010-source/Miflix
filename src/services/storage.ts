@@ -181,9 +181,13 @@ export const subscribeToGlobalMediaCatalog = (
 
 export const seedCloudCatalogWithDefaults = async () => {
   try {
-    for (const item of INITIAL_MEDIA_ITEMS) {
-      const clean = sanitizeForFirestore(item);
-      await setDoc(doc(db, 'media_items', item.id), clean, { merge: true });
+    const local = getStoredMediaItems();
+    const itemsToSeed = local && local.length > 0 ? local : INITIAL_MEDIA_ITEMS;
+    for (const item of itemsToSeed) {
+      if (item && item.id) {
+        const clean = sanitizeForFirestore(item);
+        await setDoc(doc(db, 'media_items', item.id), clean, { merge: true });
+      }
     }
   } catch (e) {
     console.warn('Seed error:', e);

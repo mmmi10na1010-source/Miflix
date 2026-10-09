@@ -1,0 +1,45 @@
+{
+  "entities": {
+    "mediaItem": {
+      "title": "Media Item",
+      "description": "Represents a movie or series catalog item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["movie", "series"] },
+        "categoryId": { "type": "string" },
+        "synopsis": { "type": "string" },
+        "posterUrl": { "type": "string" },
+        "backdropUrl": { "type": "string" },
+        "releaseYear": { "type": "number" },
+        "rating": { "type": "number" },
+        "genres": { "type": "array" },
+        "views": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "title", "type", "categoryId"]
+    },
+    "siteSettings": {
+      "title": "Site Settings",
+      "description": "Site configuration such as ad settings",
+      "type": "object",
+      "properties": {
+        "isEnabled": { "type": "boolean" },
+        "headerScript": { "type": "string" },
+        "playerBannerHtml": { "type": "string" },
+        "homeBannerHtml": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/media_items/{itemId}": {
+      "schema": "mediaItem",
+      "description": "Public catalog of movies and TV series"
+    },
+    "/site_settings/{settingId}": {
+      "schema": "siteSettings",
+      "description": "Public site configuration"
+    }
+  }
+}
