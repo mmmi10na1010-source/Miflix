@@ -116,7 +116,7 @@ export const MediaCard: React.FC<MediaCardProps> = ({
             <Info className="w-4 h-4" />
           </button>
         </div>
-      </div>
+      </a>
 
       {/* Info Block Below Poster (Clean & Elegant) */}
       <div className="p-3 flex flex-col justify-between flex-1 bg-[#0c1420]">
