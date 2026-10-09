@@ -140,7 +140,7 @@ export const MediaDetailsModal: React.FC<MediaDetailsModalProps> = ({
 
           {/* Genres */}
           <div className="flex flex-wrap items-center gap-2">
-            {item.genres.map((g) => (
+            {(item.genres || []).map((g) => (
               <span 
                 key={g}
                 className="text-xs px-3 py-1 rounded-lg bg-[#141f2e] border border-slate-700/80 text-slate-200"

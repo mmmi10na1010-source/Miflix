@@ -82,10 +82,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
           {/* Genres */}
           <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
-            {item.genres.map((g, i) => (
+            {(item.genres || []).map((g, i) => (
               <React.Fragment key={g}>
                 <span className="hover:text-cyan-300 transition-colors">{g}</span>
-                {i < item.genres.length - 1 && <span className="text-slate-600">·</span>}
+                {i < (item.genres?.length || 0) - 1 && <span className="text-slate-600">·</span>}
               </React.Fragment>
             ))}
           </div>

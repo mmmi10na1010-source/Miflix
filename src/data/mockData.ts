@@ -1,9 +1,9 @@
 import { MediaItem } from '../types';
 
-import heroBannerImg from '../assets/images/miflix_hero_banner_1790271134533.jpg';
-import turkishPosterImg from '../assets/images/turkish_drama_poster_1790271144658.jpg';
-import arabicCinemaImg from '../assets/images/arabic_cinema_poster_1790271159117.jpg';
-import animeEpicImg from '../assets/images/anime_epic_poster_1790271170377.jpg';
+const heroBannerImg = '/images/miflix_hero_banner_1790271134533.jpg';
+const turkishPosterImg = '/images/turkish_drama_poster_1790271144658.jpg';
+const arabicCinemaImg = '/images/arabic_cinema_poster_1790271159117.jpg';
+const animeEpicImg = '/images/anime_epic_poster_1790271170377.jpg';
 
 export const INITIAL_MEDIA_ITEMS: MediaItem[] = [
   // 1. تركي (Turkish)

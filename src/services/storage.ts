@@ -100,6 +100,22 @@ export async function deleteMediaItemFromCloud(itemId: string): Promise<void> {
   }
 }
 
+function normalizeMediaItem(data: any): MediaItem | null {
+  if (!data || !data.id || !data.title) return null;
+  return {
+    ...data,
+    genres: Array.isArray(data.genres) && data.genres.length > 0 ? data.genres : ['دراما'],
+    keywords: Array.isArray(data.keywords) ? data.keywords : [],
+    servers: Array.isArray(data.servers) ? data.servers : [],
+    seasons: Array.isArray(data.seasons) ? data.seasons : [],
+    views: typeof data.views === 'number' ? data.views : 0,
+    rating: typeof data.rating === 'number' ? data.rating : 8.5,
+    releaseYear: typeof data.releaseYear === 'number' ? data.releaseYear : 2024,
+    categoryId: data.categoryId || 'turkish_drama',
+    type: data.type === 'series' ? 'series' : 'movie'
+  };
+}
+
 /**
  * Fetches the entire media catalog directly from Cloud Firestore once.
  */
@@ -110,9 +126,9 @@ export async function fetchGlobalMediaCatalog(): Promise<MediaItem[]> {
     if (!snapshot.empty) {
       const items: MediaItem[] = [];
       snapshot.forEach(docSnap => {
-        const d = docSnap.data() as MediaItem;
-        if (d && d.id && d.title) {
-          items.push(d);
+        const item = normalizeMediaItem(docSnap.data());
+        if (item) {
+          items.push(item);
         }
       });
       if (items.length > 0) {
@@ -147,9 +163,9 @@ export const subscribeToGlobalMediaCatalog = (
       if (!snapshot.empty) {
         const cloudItems: MediaItem[] = [];
         snapshot.forEach((docSnap) => {
-          const d = docSnap.data() as MediaItem;
-          if (d && d.id && d.title) {
-            cloudItems.push(d);
+          const item = normalizeMediaItem(docSnap.data());
+          if (item) {
+            cloudItems.push(item);
           }
         });
         if (cloudItems.length > 0) {

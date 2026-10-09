@@ -260,8 +260,8 @@ export default function App() {
           matchesLatestEp ||
           matchesEpisodeDesc ||
           (item.originalTitle && item.originalTitle.toLowerCase().includes(q)) ||
-          item.genres.some(g => g.toLowerCase().includes(q)) ||
-          item.synopsis.toLowerCase().includes(q) ||
+          (Array.isArray(item.genres) && item.genres.some(g => g.toLowerCase().includes(q))) ||
+          (item.synopsis && item.synopsis.toLowerCase().includes(q)) ||
           (item.keywords && item.keywords.some(k => k.toLowerCase().includes(q)))
         );
       });

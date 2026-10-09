@@ -47,7 +47,7 @@ export const MediaCard: React.FC<MediaCardProps> = ({
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#101924] to-[#182638] text-center">
             <span className="text-base font-bold text-cyan-300 mb-1 leading-snug">{item.title}</span>
-            <span className="text-xs text-slate-400 font-medium">{item.genres[0]}</span>
+            <span className="text-xs text-slate-400 font-medium">{item.genres?.[0] || 'عمل سينمائي'}</span>
           </div>
         )}
 
@@ -154,7 +154,7 @@ export const MediaCard: React.FC<MediaCardProps> = ({
         {/* Views and Primary Genre Tag */}
         <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/70">
           <span className="truncate text-cyan-400 font-semibold">
-            {item.genres[0]}
+            {item.genres?.[0] || 'سينمائي'}
           </span>
           <span className="flex items-center gap-1 text-[10px] text-slate-400 shrink-0 tabular-nums font-mono">
             <Eye className="w-3 h-3 text-slate-500" />
