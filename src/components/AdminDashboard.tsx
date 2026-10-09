@@ -169,6 +169,43 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
+  // Export updated sitemap.xml for Google Search Console
+  const handleExportSitemapXml = () => {
+    const baseUrl = 'https://maiflix.mmmi10na1010.workers.dev';
+    const today = new Date().toISOString().slice(0, 10);
+    
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+    xml += `  <url><loc>${baseUrl}/</loc><lastmod>${today}</lastmod><changefreq>hourly</changefreq><priority>1.0</priority></url>\n`;
+    xml += `  <url><loc>${baseUrl}/?tab=turkish</loc><lastmod>${today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>\n`;
+    xml += `  <url><loc>${baseUrl}/?tab=arabic</loc><lastmod>${today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>\n`;
+    xml += `  <url><loc>${baseUrl}/?tab=foreign</loc><lastmod>${today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>\n`;
+    xml += `  <url><loc>${baseUrl}/?tab=anime</loc><lastmod>${today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>\n`;
+    xml += `  <url><loc>${baseUrl}/?tab=movies</loc><lastmod>${today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>\n`;
+    xml += `  <url><loc>${baseUrl}/?tab=series</loc><lastmod>${today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>\n`;
+
+    items.forEach(item => {
+      xml += `  <url><loc>${baseUrl}/?watch=${item.id}</loc><lastmod>${item.createdAt || today}</lastmod><changefreq>daily</changefreq><priority>0.85</priority></url>\n`;
+      if (item.type === 'series' && item.seasons) {
+        item.seasons.forEach(s => {
+          s.episodes?.forEach(ep => {
+            xml += `  <url><loc>${baseUrl}/?watch=${item.id}&amp;ep=${ep.id}</loc><lastmod>${item.createdAt || today}</lastmod><changefreq>daily</changefreq><priority>0.80</priority></url>\n`;
+          });
+        });
+      }
+    });
+
+    xml += `</urlset>`;
+
+    const blob = new Blob([xml], { type: 'application/xml' });
+    const url = URL.createObjectURL(blob);
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", url);
+    dlAnchor.setAttribute("download", "sitemap.xml");
+    dlAnchor.click();
+    showToast('تم تصدير ملف خريطة الموقع sitemap.xml المحدث لكافة الأعمال بنجاح!');
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-[#090e15] overflow-y-auto text-slate-100">
       {/* Top Header */}
@@ -622,12 +659,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="space-y-3">
                 <h4 className="font-bold text-white text-sm">خطوات ظهور الموقع في الصفحة الأولى بجوجل:</h4>
 
-                <div className="p-3 rounded-xl bg-[#141f2e] border border-slate-800 space-y-1">
+                <div className="p-3 rounded-xl bg-[#141f2e] border border-slate-800 space-y-2">
                   <span className="font-bold text-cyan-300">1. رابط خريطة موقعك (Sitemap URL):</span>
                   <p className="text-xs text-slate-400">انسخ هذا الرابط وضعه في Google Search Console ليقوم روبوت جوجل بفحص كل أعمالك فورياً:</p>
                   <div className="flex items-center gap-2 bg-[#0c1420] p-2 rounded-lg border border-slate-700 font-mono text-xs text-emerald-300 select-all">
                     <span>https://maiflix.mmmi10na1010.workers.dev/sitemap.xml</span>
                   </div>
+                  <button
+                    onClick={handleExportSitemapXml}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600/30 hover:bg-emerald-600 border border-emerald-500/50 text-emerald-300 hover:text-white font-bold text-xs transition-all"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>تحميل ملف Sitemap.xml المحدث لجميع أعمالك ({items.length} عمل)</span>
+                  </button>
                 </div>
 
                 <div className="p-3 rounded-xl bg-[#141f2e] border border-slate-800 space-y-2">

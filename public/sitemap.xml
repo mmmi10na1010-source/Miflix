@@ -146,4 +146,18 @@
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
   </url>
+  <!-- 15. فيلم Tuko -->
+  <url>
+    <loc>https://maiflix.mmmi10na1010.workers.dev/?watch=item-1791540523945</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <!-- 16. فيلم مي تجريبي -->
+  <url>
+    <loc>https://maiflix.mmmi10na1010.workers.dev/?watch=item-demo-mei-1</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
 </urlset>
