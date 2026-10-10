@@ -181,6 +181,21 @@ export default function App() {
       meta.setAttribute('content', content);
     };
 
+    // Function to set or update canonical link tag
+    const setCanonical = (href: string) => {
+      let link = document.getElementById('miflix-canonical-link') as HTMLLinkElement | null;
+      if (!link) {
+        link = document.querySelector('link[rel="canonical"]');
+      }
+      if (!link) {
+        link = document.createElement('link');
+        link.id = 'miflix-canonical-link';
+        link.setAttribute('rel', 'canonical');
+        document.head.appendChild(link);
+      }
+      link.setAttribute('href', href);
+    };
+
     if (activeItem) {
       const isMovie = activeItem.type === 'movie';
 
@@ -221,6 +236,7 @@ export default function App() {
       setMeta('og:title', pageTitle, true);
       setMeta('og:description', metaDesc, true);
       setMeta('og:url', currentUrl, true);
+      setCanonical(currentUrl);
       setMeta('og:image', posterImg, true);
       setMeta('og:type', isMovie ? 'video.movie' : 'video.tv_show', true);
       setMeta('twitter:title', pageTitle);
@@ -283,6 +299,7 @@ export default function App() {
       setMeta('description', homeDesc);
       setMeta('og:title', 'MIFLIX مي فليكس | موقع مي فليكس الأصلي لمشاهدة الأفلام والمسلسلات مترجمة', true);
       setMeta('og:description', homeDesc, true);
+      setCanonical('https://maiflix.mmmi10na1010.workers.dev/');
 
       const url = new URL(window.location.href);
       if (url.searchParams.has('watch')) {
