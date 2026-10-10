@@ -206,11 +206,15 @@ export const MediaDetailsModal: React.FC<MediaDetailsModalProps> = ({
                   .slice()
                   .sort((a, b) => (a.episodeNumber || 0) - (b.episodeNumber || 0))
                   .map(ep => (
-                    <button
+                    <a
                       key={ep.id}
-                      onClick={() => onPlay(item, ep.id)}
-                      className="aspect-square flex flex-col items-center justify-center rounded-xl bg-[#141f2e] hover:bg-[#00a8e1] text-slate-200 hover:text-black border border-slate-700/80 hover:border-cyan-300 transition-all transform hover:scale-105 active:scale-95 shadow-sm group"
-                      title={`مشاهدة الحلقة ${ep.episodeNumber}`}
+                      href={`?watch=${item.id}&ep=${ep.episodeNumber}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onPlay(item, ep.id);
+                      }}
+                      className="aspect-square flex flex-col items-center justify-center rounded-xl bg-[#141f2e] hover:bg-[#00a8e1] text-slate-200 hover:text-black border border-slate-700/80 hover:border-cyan-300 transition-all transform hover:scale-105 active:scale-95 shadow-sm group cursor-pointer"
+                      title={`مشاهدة مسلسل ${item.title} الحلقة ${ep.episodeNumber} مترجمة HD كاملة`}
                     >
                       <span className="text-[10px] text-slate-400 group-hover:text-black/80 font-normal">
                         حلقة
@@ -218,7 +222,7 @@ export const MediaDetailsModal: React.FC<MediaDetailsModalProps> = ({
                       <span className="text-base sm:text-lg font-black font-mono leading-none">
                         {ep.episodeNumber}
                       </span>
-                    </button>
+                    </a>
                   ))}
               </div>
             </div>

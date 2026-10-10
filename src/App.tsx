@@ -33,6 +33,7 @@ import { Top10Row } from './components/Top10Row';
 import { MediaCard } from './components/MediaCard';
 import { MediaDetailsModal } from './components/MediaDetailsModal';
 import { VideoPlayerModal } from './components/VideoPlayerModal';
+import { LatestEpisodesRow } from './components/LatestEpisodesRow';
 import { getLatestEpisodeNumber } from './utils/imageHelper';
 import { AdminLoginModal } from './components/AdminLoginModal';
 import { AdminDashboard } from './components/AdminDashboard';
@@ -120,18 +121,37 @@ export default function App() {
     };
   }, []);
 
-  // Read URL query params on initial load for direct indexing (?watch=id or ?search=query or ?tab=tab)
+  // Read URL query params on initial load and when mediaItems load (?watch=id&ep=num or ?search=query or ?tab=tab)
   useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
       const watchId = params.get('watch');
+      const epParam = params.get('ep') || params.get('episode');
       const searchParam = params.get('search');
       const tabParam = params.get('tab');
 
-      if (watchId) {
+      if (watchId && !detailsMedia && !playingMedia) {
         const found = mediaItems.find(i => i.id === watchId);
         if (found) {
-          setDetailsMedia(found);
+          if (epParam && found.type === 'series' && found.seasons) {
+            const targetNum = Number(epParam);
+            let targetEpId: string | undefined = undefined;
+            for (const s of found.seasons) {
+              const matched = s.episodes?.find(e => e.episodeNumber === targetNum || e.id === epParam);
+              if (matched) {
+                targetEpId = matched.id;
+                break;
+              }
+            }
+            if (targetEpId) {
+              setPlayingMedia(found);
+              setPlayingEpisodeId(targetEpId);
+            } else {
+              setDetailsMedia(found);
+            }
+          } else {
+            setDetailsMedia(found);
+          }
         }
       }
       if (searchParam) {
@@ -143,7 +163,7 @@ export default function App() {
     } catch (e) {
       console.warn('URL param parse error:', e);
     }
-  }, []);
+  }, [mediaItems]);
 
   // Dynamic SEO, Meta tags, and Schema.org JSON-LD for Google Search & Crawlers (Egybest / MyCima style)
   useEffect(() => {
@@ -496,6 +516,17 @@ export default function App() {
                 <AdSlot htmlContent={adSettings.homeBannerHtml} label="إعلان ممول" />
               </div>
             )}
+
+            {/* LATEST EPISODES ROW (أحدث الحلقات المضافة مع روابط سيو مخصصة لبحث جوجل) */}
+            <LatestEpisodesRow
+              items={mediaItems}
+              onPlayEpisode={(item, epId) => {
+                setPlayingMedia(item);
+                setPlayingEpisodeId(epId);
+                setDetailsMedia(null);
+              }}
+              onOpenDetails={setDetailsMedia}
+            />
 
             {/* Category 1: تركي (Turkish Drama) */}
             <div id="section-turkish_drama">
