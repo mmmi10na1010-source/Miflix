@@ -225,6 +225,23 @@ export const MediaDetailsModal: React.FC<MediaDetailsModalProps> = ({
                     </a>
                   ))}
               </div>
+
+              {/* Semantic Crawlable Episode Index for Search Engines (covers all seasons, up to 1000+ episodes) */}
+              <div className="sr-only" aria-label="فهرس جميع حلقات المسلسل لمحركات البحث">
+                {item.seasons?.map(season => (
+                  <div key={season.id}>
+                    <h5>{season.title}</h5>
+                    {season.episodes?.map(ep => (
+                      <a 
+                        key={ep.id} 
+                        href={`?watch=${item.id}&ep=${ep.episodeNumber}`}
+                      >
+                        مشاهدة مسلسل {item.title} {season.title} الحلقة {ep.episodeNumber} مترجمة HD كاملة أون لاين
+                      </a>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

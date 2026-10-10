@@ -260,35 +260,77 @@ export default function App() {
         script.type = 'application/ld+json';
         document.head.appendChild(script);
       }
+      const categoryNames: Record<string, string> = {
+        turkish_drama: 'مسلسلات تركية',
+        arabic_cinema: 'سينما عربية',
+        hollywood: 'أفلام هوليوود',
+        anime: 'مسلسلات أنمي'
+      };
+      const catLabel = categoryNames[activeItem.categoryId] || 'أفلام ومسلسلات';
+
       const schemaData = {
         '@context': 'https://schema.org',
-        '@type': isMovie ? 'Movie' : (currentEpNumber ? 'TVEpisode' : 'TVSeries'),
-        'name': isMovie ? activeItem.title : (currentEpNumber ? `${activeItem.title} الحلقة ${currentEpNumber}` : activeItem.title),
-        'alternateName': activeItem.originalTitle || undefined,
-        'headline': isMovie ? activeItem.title : (currentEpNumber ? `${activeItem.title} الحلقة ${currentEpNumber}` : activeItem.title),
-        'episodeNumber': currentEpNumber || undefined,
-        'partOfSeries': !isMovie ? {
-          '@type': 'TVSeries',
-          'name': activeItem.title
-        } : undefined,
-        'image': posterImg,
-        'description': activeItem.synopsis,
-        'datePublished': `${activeItem.releaseYear}-01-01`,
-        'genre': activeItem.genres,
-        'inLanguage': 'ar',
-        'aggregateRating': {
-          '@type': 'AggregateRating',
-          'ratingValue': activeItem.rating || 8.6,
-          'bestRating': 10,
-          'ratingCount': (activeItem.views && activeItem.views > 20) ? activeItem.views : 1850
-        },
-        'offers': {
-          '@type': 'Offer',
-          'price': '0',
-          'priceCurrency': 'USD',
-          'availability': 'https://schema.org/InStock',
-          'url': currentUrl
-        }
+        '@graph': [
+          {
+            '@type': isMovie ? 'Movie' : (currentEpNumber ? 'TVEpisode' : 'TVSeries'),
+            'name': isMovie ? activeItem.title : (currentEpNumber ? `${activeItem.title} الحلقة ${currentEpNumber}` : activeItem.title),
+            'alternateName': activeItem.originalTitle || undefined,
+            'headline': isMovie ? activeItem.title : (currentEpNumber ? `${activeItem.title} الحلقة ${currentEpNumber}` : activeItem.title),
+            'episodeNumber': currentEpNumber || undefined,
+            'partOfSeries': !isMovie ? {
+              '@type': 'TVSeries',
+              'name': activeItem.title,
+              'url': `${window.location.origin}${window.location.pathname}?watch=${activeItem.id}`
+            } : undefined,
+            'image': posterImg,
+            'description': activeItem.synopsis,
+            'datePublished': `${activeItem.releaseYear}-01-01`,
+            'genre': activeItem.genres,
+            'inLanguage': 'ar',
+            'aggregateRating': {
+              '@type': 'AggregateRating',
+              'ratingValue': activeItem.rating || 8.6,
+              'bestRating': 10,
+              'ratingCount': (activeItem.views && activeItem.views > 20) ? activeItem.views : 1850
+            },
+            'offers': {
+              '@type': 'Offer',
+              'price': '0',
+              'priceCurrency': 'USD',
+              'availability': 'https://schema.org/InStock',
+              'url': currentUrl
+            }
+          },
+          {
+            '@type': 'BreadcrumbList',
+            'itemListElement': [
+              {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'الرئيسية',
+                'item': `${window.location.origin}/`
+              },
+              {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': catLabel,
+                'item': `${window.location.origin}/?tab=${activeItem.categoryId}`
+              },
+              {
+                '@type': 'ListItem',
+                'position': 3,
+                'name': activeItem.title,
+                'item': `${window.location.origin}/?watch=${activeItem.id}`
+              },
+              ...(currentEpNumber ? [{
+                '@type': 'ListItem',
+                'position': 4,
+                'name': `الحلقة ${currentEpNumber}`,
+                'item': currentUrl
+              }] : [])
+            ]
+          }
+        ]
       };
       script.text = JSON.stringify(schemaData);
     } else if (searchQuery.trim()) {
