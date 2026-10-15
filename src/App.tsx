@@ -710,13 +710,6 @@ export default function App() {
 
           <div className="flex flex-wrap items-center justify-center gap-6 text-slate-400">
             <button
-              onClick={() => setIsIntroOpen(true)}
-              className="hover:text-cyan-400 transition-colors"
-            >
-              شعار MIFLIX الصوتي
-            </button>
-            <span className="text-slate-700">·</span>
-            <button
               onClick={() => {
                 if (isAdmin) {
                   setIsAdminDashboardOpen(true);

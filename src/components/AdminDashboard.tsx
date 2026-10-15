@@ -26,7 +26,8 @@ import {
   Tag,
   Globe,
   Send,
-  Zap
+  Zap,
+  Copy
 } from 'lucide-react';
 import { 
   MediaItem, 
@@ -46,7 +47,7 @@ import {
   deleteMediaItemFromCloud,
   saveMediaItems
 } from '../services/storage';
-import { normalizeImageUrl, isHtmlViewerImageUrl } from '../utils/imageHelper';
+import { normalizeImageUrl, isHtmlViewerImageUrl, getLatestEpisodeNumber } from '../utils/imageHelper';
 
 interface AdminDashboardProps {
   items: MediaItem[];
@@ -544,8 +545,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <span className="text-[10px] text-slate-400">مشاهدة فعلية</span>
                     </div>
 
-                    {/* Action Buttons: Edit & Delete */}
+                    {/* Action Buttons: Google Link, Edit & Delete */}
                     <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const siteBase = typeof window !== 'undefined' && window.location.origin && !window.location.origin.includes('localhost') && !window.location.origin.includes('run.app') 
+                            ? window.location.origin 
+                            : 'https://maiflix.mmmi10na1010.workers.dev';
+                          const latestEp = getLatestEpisodeNumber(item);
+                          const itemUrl = `${siteBase}/?watch=${item.id}${latestEp ? `&ep=${latestEp}` : ''}`;
+                          navigator.clipboard.writeText(itemUrl);
+                          showToast(`تم نسخ رابط الأرشفة لجوجل: ${item.title}${latestEp ? ` (الحلقة ${latestEp})` : ''}`);
+                        }}
+                        className="flex items-center gap-1 px-2 py-1.5 rounded-lg bg-[#141f2e] hover:bg-emerald-600/30 text-emerald-300 hover:text-emerald-200 border border-slate-700 hover:border-emerald-500/50 text-xs font-medium transition-all"
+                        title="نسخ رابط العمل لـ Google Search Console"
+                      >
+                        <Globe className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="hidden sm:inline">رابط جوجل</span>
+                      </button>
+
                       <button
                         onClick={() => {
                           setEditingItem(item);
@@ -699,6 +718,96 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <p className="text-xs text-slate-400">
                     في شريط البحث بالأعلى داخل Search Console، الصق رابط الموقع واضغط Enter، ثم اضغط على زر <strong className="text-white">"طلب الفهرسة" (Request Indexing)</strong>. سيقوم عنكبوت جوجل بفحص الموقع وخلال ساعات إلى أيام قليلة سيبدأ بالظهور لكل من يبحث عن اسم موقعك أو مسلسلاتك!
                   </p>
+                </div>
+
+                {/* Section 4: Individual Episode & Movie URLs for Google Console */}
+                <div className="p-3.5 rounded-xl bg-gradient-to-b from-[#141f2e] to-[#0c1420] border border-cyan-500/40 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-700/60 pb-2.5">
+                    <div>
+                      <span className="font-bold text-emerald-300 text-sm flex items-center gap-1.5">
+                        <Globe className="w-4 h-4 text-emerald-400" />
+                        <span>4. روابط كل حلقة وكل فيلم لـ Google Search Console:</span>
+                      </span>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        ضع رابط أي حلقة جديدة في شريط فحص العناوين بـ Google Search Console لتبدأ بالظهور فوراً لكل من يبحث برقم الحلقة!
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        const siteBase = typeof window !== 'undefined' && window.location.origin && !window.location.origin.includes('localhost') && !window.location.origin.includes('run.app') 
+                          ? window.location.origin 
+                          : 'https://maiflix.mmmi10na1010.workers.dev';
+                        const allUrls = items.map(item => {
+                          const latestEp = getLatestEpisodeNumber(item);
+                          const title = item.type === 'series' && latestEp 
+                            ? `${item.title} الحلقة ${latestEp}` 
+                            : item.title;
+                          const url = `${siteBase}/?watch=${item.id}${latestEp ? `&ep=${latestEp}` : ''}`;
+                          return `${title}: ${url}`;
+                        }).join('\n');
+                        navigator.clipboard.writeText(allUrls);
+                        showToast(`تم نسخ روابط جميع الأعمال والحلقات (${items.length} رابط) بنجاح!`);
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shrink-0 shadow-md transition-all active:scale-95"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>نسخ جميع الروابط دفعة واحدة</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                    {items.map(item => {
+                      const siteBase = typeof window !== 'undefined' && window.location.origin && !window.location.origin.includes('localhost') && !window.location.origin.includes('run.app') 
+                        ? window.location.origin 
+                        : 'https://maiflix.mmmi10na1010.workers.dev';
+                      const latestEp = getLatestEpisodeNumber(item);
+                      const epUrl = `${siteBase}/?watch=${item.id}${latestEp ? `&ep=${latestEp}` : ''}`;
+                      const titleLabel = item.type === 'series' && latestEp 
+                        ? `${item.title} - الحلقة ${latestEp}` 
+                        : item.title;
+
+                      return (
+                        <div key={item.id} className="p-2 rounded-lg bg-[#090e15] border border-slate-800 flex items-center justify-between gap-2 hover:border-slate-700 transition-colors">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-white text-xs truncate">{titleLabel}</span>
+                              <span className="text-[10px] px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 font-mono">
+                                {item.type === 'series' ? 'مسلسل' : 'فيلم'}
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-cyan-400 font-mono truncate select-all" dir="ltr">
+                              {epUrl}
+                            </p>
+                          </div>
+
+                          <div className="flex items-center gap-1 shrink-0">
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(epUrl);
+                                showToast(`تم نسخ رابط: ${titleLabel}`);
+                              }}
+                              className="px-2 py-1 rounded bg-slate-800 hover:bg-emerald-700/60 text-slate-200 hover:text-white text-[11px] font-semibold flex items-center gap-1 transition-colors"
+                              title="نسخ الرابط"
+                            >
+                              <Copy className="w-3 h-3" />
+                              <span>نسخ</span>
+                            </button>
+
+                            <a
+                              href={epUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-cyan-300 transition-colors"
+                              title="فتح وتجربة الرابط"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>

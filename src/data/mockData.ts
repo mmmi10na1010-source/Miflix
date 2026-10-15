@@ -1,459 +1,396 @@
 import { MediaItem } from '../types';
 
-const heroBannerImg = '/images/miflix_hero_banner_1790271134533.jpg';
-const turkishPosterImg = '/images/turkish_drama_poster_1790271144658.jpg';
-const arabicCinemaImg = '/images/arabic_cinema_poster_1790271159117.jpg';
-const animeEpicImg = '/images/anime_epic_poster_1790271170377.jpg';
-
 export const INITIAL_MEDIA_ITEMS: MediaItem[] = [
-  // 1. تركي (Turkish)
   {
-    id: 'tr-1',
-    title: 'أسرار البوسفور',
-    originalTitle: 'Boğaz Sırları',
-    type: 'series',
-    categoryId: 'turkish_drama',
-    synopsis: 'صراع عائلي ملحمي على ضفاف البوسفور بإسطنبول حيث تتشابك خيوط النفوذ والمال مع قصة حب مستحيلة تتحدى تقاليد أكبر العائلات نفوذاً.',
-    posterUrl: turkishPosterImg,
-    backdropUrl: heroBannerImg,
-    releaseYear: 2024,
-    rating: 8.9,
-    ageRating: '+16',
-    genres: ['دراما', 'تشويق', 'رومانسية'],
-    duration: '50 دقيقة',
-    isFeatured: false,
-    views: 184500, // High views -> Top trending
-    isMiflixOriginal: false,
-    keywords: [
-      'مشاهدة مسلسل أسرار البوسفور مترجم',
-      'مسلسلات تركية 2024',
-      'قصة عشق',
-      'دراما تركية رومانسية',
-      'ايجي بست تركي'
+    "id": "item-1791628634324",
+    "views": 2,
+    "title": "الخليفة",
+    "synopsis": "سرحات، الجراح الناجح الذي فرّ من قدره في أورفا ليعيش حياة جديدة في إسطنبول مع زوجته ملك، يُجبر على العودة إلى قريته لتسلم منصب الآغا والزواج من يلدز لإنهاء عداوة طويلة بين العائلات. ومع وصول ملك إلى القصر، يجد نفسه محاصرًا بين الحب والواجب، بينما تبدأ أسرار الماضي الدفينة بالظهور شيئًا فشيئًا لتقلب حياته رأسًا على عقب.",
+    "backdropUrl": "https://i.postimg.cc/pXXGjs4s/IMG-960d6e3a-033a-46b1-99ad-207d38aa9dc9.jpg",
+    "posterUrl": "https://i.postimg.cc/pXXGjs4s/IMG-960d6e3a-033a-46b1-99ad-207d38aa9dc9.jpg",
+    "releaseYear": 2025,
+    "createdAt": "2026-10-10",
+    "isFeatured": false,
+    "originalTitle": "Halef",
+    "genres": [
+      "دراما",
+      "رومانسية"
     ],
-    seasons: [
+    "isMiflixOriginal": false,
+    "type": "series",
+    "seasons": [
       {
-        id: 'tr-1-s1',
-        seasonNumber: 1,
-        title: 'الموسم الأول',
-        episodes: [
+        "episodes": [
           {
-            id: 'tr-1-s1-e1',
-            episodeNumber: 1,
-            title: 'الحلقة 1: ليلة العودة',
-            description: 'يعود كمال إلى إسطنبول بعد غياب خمس سنوات ليكتشف أن قصر العائلة أصبح تحت سيطرة عائلة أرسلان الغريمة.',
-            duration: '48 دقيقة',
-            views: 92000,
-            servers: [
-              { id: 's1', name: 'سيرفر 1 (سريع VIP)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', quality: '1080p FHD', type: 'direct' },
-              { id: 's2', name: 'سيرفر 2 (Ultra 4K)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', quality: '4K UHD', type: 'direct' },
-              { id: 's3', name: 'سيرفر 3 (احتياطي)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', quality: '720p HD', type: 'direct' }
-            ]
-          },
+            "servers": [
+              {
+                "url": "",
+                "id": "s1-1791628609788",
+                "type": "embed",
+                "name": "سيرفر VIP"
+              }
+            ],
+            "episodeNumber": 39,
+            "title": "الحلقة 39",
+            "id": "ep-1791628609788-39"
+          }
+        ],
+        "seasonNumber": 2,
+        "title": "الموسم الثاني",
+        "id": "season-1791628583339"
+      }
+    ],
+    "categoryId": "turkish_drama",
+    "keywords": [
+      "مسلسل الخليفة الحلقة",
+      "مشاهدة مسلسل الخليفة الحلقة  مترجمة كاملة",
+      "تحميل مسلسل الخليفة الحلقة  1080p",
+      "الخليفة الحلقة  قصة عشق",
+      "الخليفة حلقة 1 ايجي بست",
+      "الخليفة حلقة ماي سيما",
+      "الخليفة الحلقة  بدون إعلانات",
+      "الحلقة  الخليفة",
+      "قصة عشق الخليفة",
+      "كامل ومترجم الخليفة",
+      "بدون إعلانات مزعجة الخليفة",
+      "مدبلج للعربية الخليفة"
+    ]
+  },
+  {
+    "id": "item-1791629115011",
+    "type": "series",
+    "title": "المدينة البعيدة",
+    "isFeatured": false,
+    "views": 1,
+    "seasons": [
+      {
+        "title": "الموسم الثاني",
+        "episodes": [
           {
-            id: 'tr-1-s1-e2',
-            episodeNumber: 2,
-            title: 'الحلقة 2: المواجهة الأولى',
-            description: 'تتصاعد حدة التوتر في اجتماع مجلس الإدارة بعد إعلان كمال عن امتلاكه أسهماً تمنحه حق الفيتو.',
-            duration: '51 دقيقة',
-            views: 45000,
-            servers: [
-              { id: 's1', name: 'سيرفر 1 (سريع VIP)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', quality: '1080p FHD', type: 'direct' },
-              { id: 's2', name: 'سيرفر 2 (Ultra 4K)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', quality: '4K UHD', type: 'direct' }
+            "servers": [
+              {
+                "id": "s1-1791629102200",
+                "url": "",
+                "type": "embed",
+                "name": "سيرفر VIP"
+              }
+            ],
+            "title": "الحلقة 68",
+            "episodeNumber": 68,
+            "id": "ep-1791629102200-68"
+          }
+        ],
+        "id": "season-1791629058301",
+        "seasonNumber": 2
+      }
+    ],
+    "originalTitle": "Uzak Şehir",
+    "synopsis": "تأتي أليا ألبورا من كندا إلى ماردين مع ابنها ذي الخمس سنوات وجثمان زوجها لتنفيذ وصيته، لكنها تجد نفسها محاصرة في أراضي عائلة ألبورا دون إمكانية المغادرة. تواجه أليا صراعات مع عائلة زوجها وسط النزاعات العشائرية والتعصب الإقطاعي، محاولةً كشف أسرار الماضي وإنقاذ ابنها في الوقت نفسه.",
+    "isMiflixOriginal": false,
+    "categoryId": "turkish_drama",
+    "posterUrl": "https://i.postimg.cc/W3y37WSy/IMG-74122b43-af87-46c3-8124-38932eadab3a.jpg",
+    "releaseYear": 2024,
+    "keywords": [
+      "مسلسل المدينة البعيدة الموسم الثاني",
+      "مشاهدة مسلسل المدينة البعيدة الحلقة الموسم الثاني مترجمة كاملة",
+      "تحميل مسلسل المدينة البعيدة الحلقة الموسم الثاني 1080p",
+      "المدينة البعيدة الحلقة الموسم الثاني قصة عشق",
+      "المدينة البعيدة حلقة الموسم الثاني ايجي بست",
+      "المدينة البعيدة حلقة الموسم الثانيماي سيما",
+      "المدينة البعيدة الحلقة النوسم الثاني بدون إعلانات",
+      "الحلقة الموسم الثاني  المدينة البعيدة",
+      "كامل ومترجم المدينة البعيدة",
+      "قصة عشق المدينة البعيدة",
+      "مدبلج للعربية المدينة البعيدة",
+      "بدون إعلانات مزعجة المدينة البعيدة"
+    ],
+    "genres": [
+      "دراما",
+      "جريمة",
+      "وأكشن"
+    ],
+    "backdropUrl": "https://i.postimg.cc/W3y37WSy/IMG-74122b43-af87-46c3-8124-38932eadab3a.jpg",
+    "createdAt": "2026-10-10"
+  },
+  {
+    "id": "item-1791629572453",
+    "createdAt": "2026-10-10",
+    "title": "تحت الأرض",
+    "keywords": [
+      "مسلسل تحت الارض الموسم الثاني قصة عشق",
+      "قصة عشق تتحت الارض الموسم الثاني",
+      "مسلسل تحت الأرض الحلقة الموسم الثاني",
+      "مشاهدة مسلسل تحت الأرض الحلقة 1 مترجمة كاملة",
+      "تحميل مسلسل تحت الأرض الحلقة الموسم الثاني1080p",
+      "تحت الأرض الحلقة الموسم الثاني قصة عشق",
+      "تحت الأرض حلقة الموسم الثاني ايجي بست",
+      "تحت الأرض حلقة الموسم الثاني ماي سيما",
+      "تحت الأرض الحلقة الموسم الثاني بدون إعلانات",
+      "الحلقة الموسم الثاني تحت الأرض",
+      "قصة عشق تحت الأرض",
+      "كامل ومترجم تحت الأرض",
+      "مدبلج للعربية تحت الأرض"
+    ],
+    "views": 0,
+    "releaseYear": 2026,
+    "originalTitle": "Yeraltı",
+    "seasons": [
+      {
+        "id": "season-1791629556939",
+        "episodes": [
+          {
+            "episodeNumber": 18,
+            "title": "الحلقة 18",
+            "servers": [
+              {
+                "type": "embed",
+                "name": "سيرفر VIP",
+                "url": "",
+                "id": "s1-1791629561614"
+              }
+            ],
+            "id": "ep-1791629561614-18"
+          }
+        ],
+        "title": "الموسم الثاني",
+        "seasonNumber": 2
+      }
+    ],
+    "categoryId": "turkish_drama",
+    "backdropUrl": "https://i.postimg.cc/g2fbN9bQ/IMG-5af8cd33-9f3f-4aa6-b167-0a689a8fb88c.jpg",
+    "posterUrl": "https://i.postimg.cc/g2fbN9bQ/IMG-5af8cd33-9f3f-4aa6-b167-0a689a8fb88c.jpg",
+    "type": "series",
+    "genres": [
+      "دراما",
+      "أكشن",
+      "وجريمة"
+    ],
+    "isMiflixOriginal": false,
+    "synopsis": "يندفع شاب تحركه نار الثار إلى الاقتصاص ممن أبادوا عائلته، فيرتكب جريمة تغيّر مسار حياته بالكامل. يقوده انتقامه إلى السجن، حيث يجد نفسه محاطًا بإحدى أخطر شبكات الجريمة المنظمة في تركيا. بعد ثلاث سنوات، يخرج ليواجه حقيقة أقسى من السجن نفسه: المرأة التي ما زال قلبه متعلقًا بها أصبحت زوجة أقرب الناس إليه.",
+    "isFeatured": false
+  },
+  {
+    "id": "item-1791630094801",
+    "synopsis": "بعد 7 سنوات من اختفاء ليلي الغامض يوم زفافهما، يجدها ميرزا صدفة في سوريا أثناء إنقاذ ابن أخته المخطوف. يدخل في مغامرة خطيرة لتهريبها إلى كابادوكيا، ليشتعل حبّهما القديم مجدداً وسط أسرار عائلية وصراعات مصيرية.",
+    "createdAt": "2026-10-10",
+    "backdropUrl": "https://i.postimg.cc/YSsR1kcY/IMG-5f058b49-f02e-448d-b38b-706ff787c7f9.jpg",
+    "posterUrl": "https://i.postimg.cc/YSsR1kcY/IMG-5f058b49-f02e-448d-b38b-706ff787c7f9.jpg",
+    "title": "حبك نار",
+    "releaseYear": 2026,
+    "views": 0,
+    "isMiflixOriginal": false,
+    "categoryId": "turkish_drama",
+    "type": "series",
+    "genres": [
+      "دراما",
+      "ورومانسية (مع طابع من الغموض والأسرار العائلية)"
+    ],
+    "seasons": [
+      {
+        "id": "s-1",
+        "seasonNumber": 1,
+        "title": "الموسم الأول",
+        "episodes": [
+          {
+            "id": "ep-1791630089829-6",
+            "episodeNumber": 6,
+            "title": "الحلقة 6",
+            "servers": [
+              {
+                "url": "",
+                "name": "سيرفر VIP",
+                "type": "embed",
+                "id": "s1-1791630089829"
+              }
             ]
           }
         ]
       }
     ],
-    createdAt: '2025-01-10'
+    "isFeatured": false,
+    "keywords": [
+      "مسلسل حبك نار قصة عشق",
+      "قصة عشق حبك نار",
+      "مسلسل حبك نار الحلقة 1",
+      "مشاهدة مسلسل حبك نار الحلقة 1 مترجمة كاملة",
+      "تحميل مسلسل حبك نار الحلقة 1 1080p",
+      "حبك نار الحلقة 1 قصة عشق",
+      "حبك نار حلقة 1 ايجي بست",
+      "حبك نار حلقة 1 ماي سيما",
+      "حبك نار الحلقة 1 بدون إعلانات",
+      "الحلقة 1 حبك نار",
+      "مشاهدة وتحميل حبك نار",
+      "كامل ومترجم حبك نار",
+      "ايجي بست حبك نار",
+      "بجودة 1080p FHD حبك نار",
+      "قصة عشق حبك نار"
+    ],
+    "originalTitle": "Sevdan Bir Ateş"
   },
   {
-    id: 'tr-2',
-    title: 'قيامة المحارب',
-    originalTitle: 'Savaşçının Doğuşu',
-    type: 'series',
-    categoryId: 'turkish_drama',
-    synopsis: 'ملحمة تاريخية أسطورية تدور في القرن الثالث عشر حول تأسيس دولة جديدة وصراعات الفرسان والمكائد العسكرية في قلب الأناضول.',
-    posterUrl: turkishPosterImg,
-    backdropUrl: heroBannerImg,
-    releaseYear: 2023,
-    rating: 9.1,
-    ageRating: '+16',
-    genres: ['تاريخي', 'حربي', 'أكشن ملحمي'],
-    duration: '60 دقيقة',
-    isFeatured: false,
-    views: 142000,
-    isMiflixOriginal: false,
-    seasons: [
+    "id": "item-1791630550816",
+    "title": "هذا البحر سوف يفيض",
+    "views": 0,
+    "isFeatured": false,
+    "type": "series",
+    "keywords": [
+      "مسلسل هذا البحر سوف يفيض الموسم الثاني قصة عشق",
+      "مسلسل هذا البحر سوف يفيض الموسم الاول قصة عشق",
+      "قصة عشق هذا البحر سوف يفيض",
+      "مسلسل هذا البحر سوف يفيض الحلقة الموسم الثاني",
+      "مشاهدة مسلسل هذا البحر سوف يفيض الحلقة الموسم الاول و الثاني مترجمة كاملة",
+      "تحميل مسلسل هذا البحر سوف يفيض الحلقة الموسم الثاني 1080p",
+      "هذا البحر سوف يفيض الحلقة الموسم الثانيقصة عشق",
+      "هذا البحر سوف يفيض حلقة الموسم الثاني ايجي بست",
+      "هذا البحر سوف يفيض حلقة 1 ماي سيما",
+      "هذا البحر سوف يفيض الحلقة 1 بدون إعلانات",
+      "الحلقة 1 هذا البحر سوف يفيض"
+    ],
+    "createdAt": "2026-10-10",
+    "categoryId": "turkish_drama",
+    "synopsis": "تشتعل الأحداث بصراع طويل الأمد بين عائلة مُرتونا وعائلة كوتشاري، حيث تتحرك خيوطه بين الانتقام والطمع والحب والخيانة وتتعقد الأمور بعد ظهور شخصية إيليني، الفتاة القادمة من أثينا للبحث عن جذورها، والتي تفتح أبوابًا ماضية مغلقة. كما أن خروج \"شريف\" زوج إسمي من السجن يشعل التوتر ويقلب موازين القوى.",
+    "backdropUrl": "https://i.postimg.cc/W1McWWp0/IMG-38a32356-e02d-46e8-9fa4-0c07bcfb1d53.jpg",
+    "originalTitle": "Taşacak Bu Deniz",
+    "genres": [
+      "دراما",
+      "تشويق"
+    ],
+    "releaseYear": 2025,
+    "isMiflixOriginal": false,
+    "seasons": [
       {
-        id: 'tr-2-s1',
-        seasonNumber: 1,
-        title: 'الموسم 1',
-        episodes: [
+        "title": "الموسم الثاني",
+        "id": "season-1791630538542",
+        "episodes": [
           {
-            id: 'tr-2-s1-e1',
-            episodeNumber: 1,
-            title: 'الحلقة 1: راية الأجداد',
-            duration: '62 دقيقة',
-            views: 71000,
-            servers: [
-              { id: 's1', name: 'سيرفر 1 (سريع VIP)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', quality: '1080p FHD', type: 'direct' },
-              { id: 's2', name: 'سيرفر 2 (Ultra 4K)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', quality: '4K UHD', type: 'direct' }
+            "title": "الحلقة 34",
+            "id": "ep-1791630546887-34",
+            "episodeNumber": 34,
+            "servers": [
+              {
+                "id": "s1-1791630546887",
+                "url": "",
+                "name": "سيرفر VIP",
+                "type": "embed"
+              }
             ]
+          }
+        ],
+        "seasonNumber": 2
+      }
+    ],
+    "posterUrl": "https://i.postimg.cc/W1McWWp0/IMG-38a32356-e02d-46e8-9fa4-0c07bcfb1d53.jpg"
+  },
+  {
+    "id": "item-1791630992250",
+    "genres": [
+      "كوميدي",
+      "رومانسي",
+      "ودراما اجتماعية"
+    ],
+    "backdropUrl": "https://i.postimg.cc/hGzyZh1r/IMG-2aaa581f-abef-4b11-9d06-3512e8b1dc61.jpg",
+    "isFeatured": false,
+    "synopsis": "تدور الأحداث حول شخصية \"دفنه\" التي تجاوزت الثلاثين من عمرها، وشقت طريقها في الحياة المهنية بعصامية وقوة لتعتمد على نفسها. ورغم نجاح شعورها بالقوة والاستقرار، تدرك كم هي متعبة وتحتاج للحب، لتجد نفسها ولأول مرة تقع في الحب عندما يعترض طريقها رجلان يقلبان حياتها رأساً على عقب.",
+    "releaseYear": 2026,
+    "originalTitle": "Muhtemel Aşk",
+    "title": "حب محتمل",
+    "views": 0,
+    "createdAt": "2026-10-10",
+    "keywords": [
+      "حب محتمل الحلقة 18 قصة عشق",
+      "قصة عشق حب محتمل",
+      "حب محتمل قصة عشق مترجم",
+      "مسلسل حب محتمل قصة عشق",
+      "مسلسل حب محتمل الحلقة 1",
+      "مشاهدة مسلسل حب محتمل الحلقة 1 مترجمة كاملة",
+      "تحميل مسلسل حب محتمل الحلقة 1 1080p",
+      "حب محتمل الحلقة 1 قصة عشق",
+      "حب محتمل حلقة 1 ايجي بست",
+      "حب محتمل حلقة 1 ماي سيما",
+      "حب محتمل الحلقة 1 بدون إعلانات",
+      "الحلقة 1 حب محتمل",
+      "كامل ومترجم حب محتمل",
+      "بدون إعلانات مزعجة حب محتمل",
+      "مدبلج للعربية حب محتمل"
+    ],
+    "categoryId": "turkish_drama",
+    "type": "series",
+    "isMiflixOriginal": false,
+    "posterUrl": "https://i.postimg.cc/hGzyZh1r/IMG-2aaa581f-abef-4b11-9d06-3512e8b1dc61.jpg",
+    "seasons": [
+      {
+        "title": "الموسم الأول",
+        "seasonNumber": 1,
+        "id": "s-1",
+        "episodes": [
+          {
+            "servers": [
+              {
+                "url": "",
+                "id": "s1-1791630981642",
+                "type": "embed",
+                "name": "سيرفر VIP"
+              }
+            ],
+            "id": "ep-1791630981642-18",
+            "episodeNumber": 18,
+            "title": "الحلقة 18"
           }
         ]
       }
-    ],
-    createdAt: '2025-01-12'
+    ]
   },
   {
-    id: 'tr-3',
-    title: 'طائر النار',
-    originalTitle: 'Ateş Kuşları',
-    type: 'series',
-    categoryId: 'turkish_drama',
-    synopsis: 'قصة إنسانية مؤثرة لخمسة أطفال شوارع يواجهون قسوة الحياة معاً ويصنعون عائلتهم الخاصة رغم كل العواصف.',
-    posterUrl: turkishPosterImg,
-    backdropUrl: heroBannerImg,
-    releaseYear: 2024,
-    rating: 8.5,
-    ageRating: '+13',
-    genres: ['دراما اجتماعية', 'إنساني'],
-    duration: '45 دقيقة',
-    views: 96000,
-    seasons: [
+    "id": "item-1791631603059",
+    "backdropUrl": "https://i.postimg.cc/NMGyf2PY/images.jpg",
+    "isMiflixOriginal": false,
+    "createdAt": "2026-10-10",
+    "genres": [
+      "دراما",
+      "تشويق"
+    ],
+    "isFeatured": false,
+    "keywords": [
+      "مسلسل ورود وذنوب قصة عشم الموسم الثاني و الاول",
+      "قصة عشق ورود وذنوب الموسم الثاني و الاول",
+      "قصة عشق ورود وذنوبمسلسل ورود وذنوب الحلقة الموسم الثاني",
+      "مشاهدة مسلسل ورود وذنوب الحلقة الموسم الثاني مترجمة كاملة",
+      "تحميل مسلسل ورود وذنوب الحلقة الموسم الثاني 1080p",
+      "ورود وذنوب الحلقة 1 قصة عشق",
+      "ورود وذنوب حلقة الموسم الثاني ايجي بست",
+      "ورود وذنوب حلقة 1 ماي سيما",
+      "ورود وذنوب الحلقة الموسم الثاني بدون إعلانات",
+      "الحلقة الموسم الثاني ورود وذنوب"
+    ],
+    "releaseYear": 2025,
+    "originalTitle": "Güller ve Günahlar",
+    "posterUrl": "https://i.postimg.cc/NMGyf2PY/images.jpg",
+    "synopsis": "تتناول قصة رجل الأعمال الناجح \"سرحات\" الذي بُني عالمه على الصصدق والثقة، حتى يكتشف أن زوجته \"بيراك\" كانت تخفي عنه سرًا كبيرًا لسنوات. وقبل أن يواجهها، تتعرض لحادث مأساوي يدخلها في غيبوبة طويلة، تاركة خلفها أسرارًا تهدد تماسك الأسرة. وفي أثناء محاولة سرحات ترتيب حياته المنهارة، تقتحم عالمه \"زينب\"، وهي شابة جريئة وصريحة من حي فقير.",
+    "categoryId": "turkish_drama",
+    "type": "series",
+    "views": 0,
+    "title": "ورود وذنوب",
+    "seasons": [
       {
-        id: 'tr-3-s1',
-        seasonNumber: 1,
-        title: 'الموسم 1',
-        episodes: [
+        "title": "الموسم الثاني",
+        "id": "season-1791631570238",
+        "episodes": [
           {
-            id: 'tr-3-s1-e1',
-            episodeNumber: 1,
-            title: 'الحلقة 1: البدايات الأولى',
-            duration: '45 دقيقة',
-            views: 48000,
-            servers: [
-              { id: 's1', name: 'سيرفر 1 (سريع VIP)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', quality: '1080p FHD', type: 'direct' }
-            ]
+            "title": "الحلقة 38",
+            "id": "ep-1791631600803-38",
+            "servers": [
+              {
+                "id": "s1-1791631600803",
+                "name": "سيرفر VIP",
+                "type": "embed",
+                "url": ""
+              }
+            ],
+            "episodeNumber": 38
           }
-        ]
+        ],
+        "seasonNumber": 2
       }
-    ],
-    createdAt: '2025-02-01'
-  },
-
-  // 2. عربي (Arabic)
-  {
-    id: 'ar-1',
-    title: 'صائد الظلال',
-    originalTitle: 'Shadow Hunter',
-    type: 'movie',
-    categoryId: 'arabic_cinema',
-    synopsis: 'في شوارع القاهرة والرياض الصاخبة، يتعقب محقق استخباراتي بارع شبكة جرائم مالية وإلكترونية دولية تتخطى الحدود قبل ضربتها الكبرى.',
-    posterUrl: arabicCinemaImg,
-    backdropUrl: heroBannerImg,
-    releaseYear: 2024,
-    rating: 8.8,
-    ageRating: '+16',
-    genres: ['جريمة', 'غموض', 'إثارة وتشويق'],
-    duration: 'ساعتان و 12 دقيقة',
-    isFeatured: false,
-    views: 220000, // Very high -> Top trending
-    keywords: [
-      'مشاهدة فيلم صائد الظلال كامل',
-      'تحميل فيلم صائد الظلال 1080p',
-      'افلام عربي 2024 سينما',
-      'ماي سيما صائد الظلال',
-      'ايجي بست افلام اكشن'
-    ],
-    servers: [
-      { id: 's1', name: 'سيرفر 1 (سريع VIP)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', quality: '4K UHD', type: 'direct' },
-      { id: 's2', name: 'سيرفر 2 (FHD متعدد الجودات)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', quality: '1080p', type: 'direct' },
-      { id: 's3', name: 'سيرفر 3 (خفيف للموبايل)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', quality: '720p', type: 'direct' }
-    ],
-    createdAt: '2025-01-15'
-  },
-  {
-    id: 'ar-2',
-    title: 'كيرة والجن: ملحمة المقاومة',
-    originalTitle: 'Kira & El Gin',
-    type: 'movie',
-    categoryId: 'arabic_cinema',
-    synopsis: 'ملحمة بطولية ترصد تكاتف نخبة من الفدائيين الأحرار في مواجهة الاحتلال البريطاني إبان ثورة 1919 في واحدة من أضخم الإنتاجات السينمائية العربية.',
-    posterUrl: arabicCinemaImg,
-    backdropUrl: heroBannerImg,
-    releaseYear: 2023,
-    rating: 9.0,
-    ageRating: '+16',
-    genres: ['تاريخي', 'أكشن', 'دراما وطنية'],
-    duration: 'ساعتان و 45 دقيقة',
-    views: 165000,
-    servers: [
-      { id: 's1', name: 'سيرفر 1 (سريع VIP)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', quality: '4K UHD', type: 'direct' },
-      { id: 's2', name: 'سيرفر 2 (FHD 1080p)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', quality: '1080p', type: 'direct' }
-    ],
-    createdAt: '2025-01-18'
-  },
-  {
-    id: 'ar-3',
-    title: 'رمال الذهب',
-    originalTitle: 'Golden Sands',
-    type: 'movie',
-    categoryId: 'arabic_cinema',
-    synopsis: 'رحلة استكشافية مشحونة بالمخاطر في صحراء الربع الخالي بحثاً عن كنز أثري مدفون منذ ألف عام يطمع فيه صيادو الآثار الدوليون.',
-    posterUrl: arabicCinemaImg,
-    backdropUrl: heroBannerImg,
-    releaseYear: 2024,
-    rating: 8.3,
-    ageRating: '+13',
-    genres: ['مغامرة', 'تشويق', 'إثارة'],
-    duration: 'ساعة و 54 دقيقة',
-    views: 89000,
-    servers: [
-      { id: 's1', name: 'سيرفر 1 (سريع VIP)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', quality: '1080p', type: 'direct' }
-    ],
-    createdAt: '2025-02-05'
-  },
-
-  // 3. أجنبي (Foreign / Hollywood)
-  {
-    id: 'hw-1',
-    title: 'المحيط السيبراني: البروتوكول الأخير',
-    originalTitle: 'Cyber Void: Final Protocol',
-    type: 'movie',
-    categoryId: 'hollywood',
-    synopsis: 'في عام 2088، يحاول فريق من قراصنة الذاكرة والعملاء السابقين إيقاف نظام ذكاء اصطناعي بعد سيطرته على شبكة الطاقة والاتصالات العالمية.',
-    posterUrl: heroBannerImg,
-    backdropUrl: heroBannerImg,
-    releaseYear: 2024,
-    rating: 8.9,
-    ageRating: '+16',
-    genres: ['خيال علمي', 'أكشن', 'إثارة'],
-    duration: 'ساعتان و 18 دقيقة',
-    isFeatured: true, // Main featured banner
-    views: 310000, // Top 1 view
-    servers: [
-      { id: 's1', name: 'سيرفر 1 (سريع VIP 4K)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', quality: '4K HDR', type: 'direct' },
-      { id: 's2', name: 'سيرفر 2 (FHD 1080p)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', quality: '1080p', type: 'direct' },
-      { id: 's3', name: 'سيرفر 3 (سيرفر احتياطي دولي)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', quality: '1080p', type: 'direct' }
-    ],
-    createdAt: '2025-01-01'
-  },
-  {
-    id: 'hw-2',
-    title: 'أوبنهايمر',
-    originalTitle: 'Oppenheimer',
-    type: 'movie',
-    categoryId: 'hollywood',
-    synopsis: 'السيرة الذاتية الملحمية للعالم الفيزيائي روبرت أوبنهايمر ودوره المحوري في مشروع مانهاتن الذي غيّر تاريخ البشرية إلى الأبد.',
-    posterUrl: heroBannerImg,
-    backdropUrl: heroBannerImg,
-    releaseYear: 2023,
-    rating: 9.2,
-    ageRating: '+16',
-    genres: ['سيرة ذاتية', 'دراما تاريخية'],
-    duration: '3 ساعات',
-    views: 198000,
-    servers: [
-      { id: 's1', name: 'سيرفر 1 (سريع VIP)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', quality: '4K UHD', type: 'direct' }
-    ],
-    createdAt: '2025-01-04'
-  },
-  {
-    id: 'hw-3',
-    title: 'كثيب: الجزء الثاني',
-    originalTitle: 'Dune: Part Two',
-    type: 'movie',
-    categoryId: 'hollywood',
-    synopsis: 'يواصل بول أتريديس رحلته الملحمية متحالفا مع تشاني والفريمن في مسعى للانتقام من المتآمرين الذين دمروا عائلته وصراعه للسيطرة على كوكب أراكيس.',
-    posterUrl: heroBannerImg,
-    backdropUrl: heroBannerImg,
-    releaseYear: 2024,
-    rating: 9.0,
-    ageRating: '+13',
-    genres: ['خيال علمي', 'مغامرة فضاء'],
-    duration: 'ساعتان و 46 دقيقة',
-    views: 154000,
-    servers: [
-      { id: 's1', name: 'سيرفر 1 (سريع VIP)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', quality: '4K UHD', type: 'direct' }
-    ],
-    createdAt: '2025-01-08'
-  },
-
-  // 4. أنمي (Anime)
-  {
-    id: 'an-1',
-    title: 'سيف الظلال: بوابة الفوضى',
-    originalTitle: 'Kage no Yaiba',
-    type: 'series',
-    categoryId: 'anime',
-    synopsis: 'في عالم تسكنه أطياف الظلام، يوقظ فتى يتيم قوة نصل سحري موروث من سلالة حراس العوالم ويبدأ معركته ضد كائنات الهاوية.',
-    posterUrl: animeEpicImg,
-    backdropUrl: animeEpicImg,
-    releaseYear: 2024,
-    rating: 9.3,
-    ageRating: '+16',
-    genres: ['أنمي خيال', 'أكشن', 'قوى خارقة'],
-    duration: '24 دقيقة',
-    views: 172000,
-    seasons: [
-      {
-        id: 'an-1-s1',
-        seasonNumber: 1,
-        title: 'الموسم الأول',
-        episodes: [
-          {
-            id: 'an-1-s1-e1',
-            episodeNumber: 1,
-            title: 'الحلقة 1: وريث اللهب',
-            description: 'يكتشف رين حقيقة العلامة الموشومة على ذراعه حين يهاجم وحش من الرتبة العليا قريته المعزولة.',
-            duration: '24 دقيقة',
-            views: 86000,
-            servers: [
-              { id: 's1', name: 'سيرفر 1 (بلوراي)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', quality: '1080p FHD', type: 'direct' },
-              { id: 's2', name: 'سيرفر 2 (Ultra 4K)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', quality: '4K UHD', type: 'direct' }
-            ]
-          }
-        ]
-      }
-    ],
-    createdAt: '2025-01-20'
-  },
-  {
-    id: 'an-2',
-    title: 'هجوم العمالقة: الفصل الأخير',
-    originalTitle: 'Attack on Titan: The Final Chapter',
-    type: 'series',
-    categoryId: 'anime',
-    synopsis: 'المعركة الفاصلة لمصير البشرية بأكملها، حيث تتصارع أيديولوجيات الحرية والانتقام في ذروة أحداث واحدة من أعظم سلاسل الأنمي في التاريخ.',
-    posterUrl: animeEpicImg,
-    backdropUrl: animeEpicImg,
-    releaseYear: 2023,
-    rating: 9.6,
-    ageRating: '+18',
-    genres: ['أنمي سينمائي', 'ملحمة عسكرية'],
-    duration: '28 دقيقة',
-    views: 240000, // Very high trending
-    seasons: [
-      {
-        id: 'an-2-s1',
-        seasonNumber: 1,
-        title: 'القسم الختامي',
-        episodes: [
-          {
-            id: 'an-2-s1-e1',
-            episodeNumber: 1,
-            title: 'حلقة خاصة: دوي الأرض',
-            duration: '60 دقيقة',
-            views: 120000,
-            servers: [
-              { id: 's1', name: 'سيرفر 1 (بلوراي أصلي)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', quality: '4K UHD', type: 'direct' }
-            ]
-          }
-        ]
-      }
-    ],
-    createdAt: '2025-01-22'
-  },
-  {
-    id: 'an-3',
-    title: 'سولو ليفلينج: ارتقاء الظل',
-    originalTitle: 'Solo Leveling',
-    type: 'series',
-    categoryId: 'anime',
-    synopsis: 'بعد أن كان أضعف صياد في العالم أجمع، يحصل سونغ جين وو على فرصة لا مثيل لها عبر نظام مهام فريد يمنحه قوة لا نهائية للتطور بمفرده.',
-    posterUrl: animeEpicImg,
-    backdropUrl: animeEpicImg,
-    releaseYear: 2024,
-    rating: 9.2,
-    ageRating: '+16',
-    genres: ['أكشن', 'فانتازيا سحرية', 'مغامرة'],
-    duration: '24 دقيقة',
-    views: 135000,
-    seasons: [
-      {
-        id: 'an-3-s1',
-        seasonNumber: 1,
-        title: 'الموسم الأول',
-        episodes: [
-          {
-            id: 'an-3-s1-e1',
-            episodeNumber: 1,
-            title: 'الحلقة 1: الصياد الأضعف',
-            duration: '24 دقيقة',
-            views: 67000,
-            servers: [
-              { id: 's1', name: 'سيرفر 1 (سريع VIP)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', quality: '1080p', type: 'direct' }
-            ]
-          }
-        ]
-      }
-    ],
-    createdAt: '2025-01-25'
-  },
-
-  // 5. أعمال MIFLIX (MIFLIX Originals)
-  {
-    id: 'mf-1',
-    title: 'أسرار المملكة: فجر جديد',
-    originalTitle: 'Kingdom of Secrets: New Dawn',
-    type: 'series',
-    categoryId: 'miflix_originals',
-    synopsis: 'إنتاج أصلي حصري من MIFLIX. دراما سياسية وتشويقية ضخمة تروي كواليس النفوذ والمصالح والتحديات الاستراتيجية في منطقة الشرق الأوسط برؤية سينمائية عالمية غير مسبوقة.',
-    posterUrl: heroBannerImg,
-    backdropUrl: heroBannerImg,
-    releaseYear: 2025,
-    rating: 9.4,
-    ageRating: '+16',
-    genres: ['إنتاج MIFLIX الأصلي', 'إثارة سياسية', 'دراما معاصرة'],
-    duration: '55 دقيقة',
-    isFeatured: true,
-    views: 295000, // Top rank in views
-    isMiflixOriginal: true,
-    seasons: [
-      {
-        id: 'mf-1-s1',
-        seasonNumber: 1,
-        title: 'الموسم 1: شبكة النفوذ',
-        episodes: [
-          {
-            id: 'mf-1-s1-e1',
-            episodeNumber: 1,
-            title: 'الحلقة 1: عاصفة الرياض',
-            description: 'انفجار تسريب سري يهز أروقة الدبلوماسية الدولية ويضع فريق المهام الخاصة أمام 24 ساعة لاحتواء الأزمة.',
-            duration: '56 دقيقة',
-            views: 147000,
-            servers: [
-              { id: 's1', name: 'سيرفر 1 (MIFLIX CDN فائقة السرعة)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', quality: '4K Dolby Vision', type: 'direct' },
-              { id: 's2', name: 'سيرفر 2 (MIFLIX FHD 1080p)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', quality: '1080p 60fps', type: 'direct' }
-            ]
-          }
-        ]
-      }
-    ],
-    createdAt: '2025-02-10'
-  },
-  {
-    id: 'mf-2',
-    title: 'المهمة صفر: ليلة بيروت',
-    originalTitle: 'Mission Zero: Beirut Night',
-    type: 'movie',
-    categoryId: 'miflix_originals',
-    synopsis: 'فيلم الإثارة والأكشن الحصري من MIFLIX. عملية إنقاذ سرية تجري تحت جنح الظلام في قلب ميناء بيروت لإنقاذ عالم تكنولوجيا محتجز.',
-    posterUrl: arabicCinemaImg,
-    backdropUrl: heroBannerImg,
-    releaseYear: 2025,
-    rating: 8.9,
-    ageRating: '+16',
-    genres: ['إنتاج MIFLIX الأصلي', 'أكشن', 'إثارة ومطاردات'],
-    duration: 'ساعتان و 5 دقائق',
-    views: 180000,
-    isMiflixOriginal: true,
-    servers: [
-      { id: 's1', name: 'سيرفر 1 (MIFLIX CDN فائقة السرعة)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', quality: '4K UHD', type: 'direct' },
-      { id: 's2', name: 'سيرفر 2 (MIFLIX FHD)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', quality: '1080p', type: 'direct' }
-    ],
-    createdAt: '2025-02-14'
+    ]
   }
 ];

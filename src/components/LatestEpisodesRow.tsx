@@ -83,15 +83,11 @@ export const LatestEpisodesRow: React.FC<LatestEpisodesRowProps> = ({
             <Tv className="w-4 h-4 text-red-400" />
           </div>
           <div>
-            <h2 className="text-xl md:text-2xl font-black text-white flex items-center gap-2">
-              <span>أحدث الحلقات المضافة اليوم</span>
-              <span className="text-[11px] px-2 py-0.5 rounded-md bg-red-950/90 border border-red-800 text-red-300 font-bold flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-red-400" />
-                <span>تحديث فوري للسيو وبحث جوجل</span>
-              </span>
+            <h2 className="text-xl md:text-2xl font-black text-white">
+              أحدث الحلقات المضافة اليوم
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              تصفح وشاهد أحدث حلقات المسلسلات التركية والعربية فور صدورها بروابط مباشرة قابلة للأرشفة
+              تصفح وشاهد أحدث حلقات المسلسلات الحصرية فور صدورها بجودة 1080p FHD
             </p>
           </div>
         </div>
