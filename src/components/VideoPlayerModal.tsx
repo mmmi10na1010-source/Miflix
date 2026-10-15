@@ -73,6 +73,12 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
       trimmed = iframeSrcMatch[1].trim();
     }
 
+    // cdnplus.org -> cdnplus.org/embed-{id}.html
+    if (trimmed.includes('cdnplus.org') && !trimmed.includes('/embed-')) {
+      trimmed = trimmed.replace(/cdnplus\.org\/([a-zA-Z0-9]+)\.html/, 'cdnplus.org/embed-$1.html');
+      return { url: trimmed, isEmbed: true };
+    }
+
     // vidspeed.org -> vidspeed.org/embed-{id}.html
     if (trimmed.includes('vidspeed.org') && !trimmed.includes('/embed-')) {
       trimmed = trimmed.replace(/vidspeed\.org\/([a-zA-Z0-9]+)\.html/, 'vidspeed.org/embed-$1.html');
