@@ -1056,9 +1056,20 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
     }
   };
 
+  const sanitizeServerUrl = (raw: string): string => {
+    if (!raw) return '';
+    let trimmed = raw.trim();
+    const hrefMatch = trimmed.match(/<a\s+(?:[^>]*?\s+)?href=["']([^"']+)["']/i);
+    if (hrefMatch && hrefMatch[1]) return hrefMatch[1].trim();
+    const iframeMatch = trimmed.match(/<iframe\s+(?:[^>]*?\s+)?src=["']([^"']+)["']/i);
+    if (iframeMatch && iframeMatch[1]) return iframeMatch[1].trim();
+    return trimmed;
+  };
+
   const handleUpdateMovieServer = (idx: number, field: keyof ServerSource, val: string) => {
     const copy = [...movieServers];
-    copy[idx] = { ...copy[idx], [field]: val };
+    const cleanedVal = field === 'url' ? sanitizeServerUrl(val) : val;
+    copy[idx] = { ...copy[idx], [field]: cleanedVal };
     setMovieServers(copy);
   };
 
@@ -2102,7 +2113,7 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
                                         value={srv.url}
                                         onChange={(e) => {
                                           const copy = [...seasons];
-                                          copy[selectedSeasonIdx].episodes[epIdx].servers[srvIdx].url = e.target.value;
+                                          copy[selectedSeasonIdx].episodes[epIdx].servers[srvIdx].url = sanitizeServerUrl(e.target.value);
                                           setSeasons(copy);
                                         }}
                                         placeholder="رابط البث أو كود التضمين (vidspeed, anafast, dood, mp4, iframe...)"
