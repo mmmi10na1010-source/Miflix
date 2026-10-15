@@ -67,15 +67,21 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
     if (!rawUrl) return { url: '', isEmbed: false };
     let trimmed = rawUrl.trim();
 
-    // If user pasted a full <IFRAME ... SRC="url" ...></IFRAME> snippet
-    const iframeSrcMatch = trimmed.match(/src=["']([^"']+)["']/i);
+    // If user pasted an <a href="...">...</a> HTML link snippet
+    const hrefMatch = trimmed.match(/<a\s+(?:[^>]*?\s+)?href=["']([^"']+)["']/i);
+    if (hrefMatch && hrefMatch[1]) {
+      trimmed = hrefMatch[1].trim();
+    }
+
+    // If user pasted a full <iframe ... src="url" ...></iframe> snippet
+    const iframeSrcMatch = trimmed.match(/<iframe\s+(?:[^>]*?\s+)?src=["']([^"']+)["']/i);
     if (iframeSrcMatch && iframeSrcMatch[1]) {
       trimmed = iframeSrcMatch[1].trim();
     }
 
-    // cdnplus.org -> cdnplus.org/embed-{id}.html
-    if (trimmed.includes('cdnplus.org') && !trimmed.includes('/embed-')) {
-      trimmed = trimmed.replace(/cdnplus\.org\/([a-zA-Z0-9]+)\.html/, 'cdnplus.org/embed-$1.html');
+    // cdnplus.org / cdnplus.buzz -> embed-{id}.html
+    if (trimmed.includes('cdnplus.') && !trimmed.includes('/embed-')) {
+      trimmed = trimmed.replace(/cdnplus\.[a-z]+\/([a-zA-Z0-9]+)\.html/, 'cdnplus.org/embed-$1.html');
       return { url: trimmed, isEmbed: true };
     }
 
