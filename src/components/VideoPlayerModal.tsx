@@ -4,10 +4,12 @@ import {
   Server, 
   Play, 
   Maximize2, 
+  Minimize2,
   Tv, 
   ChevronLeft,
   Download,
-  Zap
+  Zap,
+  RotateCw
 } from 'lucide-react';
 import { MediaItem, ServerSource, Episode, Season } from '../types';
 import { getStoredAdSettings } from '../services/storage';
@@ -54,6 +56,11 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
   const [selectedServerIndex, setSelectedServerIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isTheaterMode, setIsTheaterMode] = useState<boolean>(false);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [isForcedLandscape, setIsForcedLandscape] = useState<boolean>(false);
+  const [isLandscapeMode, setIsLandscapeMode] = useState<boolean>(
+    typeof window !== 'undefined' ? window.innerWidth > window.innerHeight : false
+  );
   const videoContainerRef = useRef<HTMLDivElement>(null);
   const adSettings = getStoredAdSettings();
 
@@ -170,17 +177,146 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
     return currentIndex >= 0 && currentIndex < sorted.length - 1;
   };
 
-  const toggleFullscreen = () => {
+  // Track device viewport orientation changes
+  useEffect(() => {
+    const handleOrientationChange = () => {
+      setIsLandscapeMode(window.innerWidth > window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleOrientationChange);
+    window.addEventListener('orientationchange', handleOrientationChange);
+    return () => {
+      window.removeEventListener('resize', handleOrientationChange);
+      window.removeEventListener('orientationchange', handleOrientationChange);
+    };
+  }, []);
+
+  // Listen to fullscreen transitions (from both custom UI and inner iframe video player controls)
+  useEffect(() => {
+    const handleFullscreenChange = async () => {
+      const fsElement = 
+        document.fullscreenElement ||
+        (document as any).webkitFullscreenElement ||
+        (document as any).mozFullScreenElement ||
+        (document as any).msFullscreenElement;
+
+      const activeFs = !!fsElement;
+      setIsFullscreen(activeFs);
+
+      if (activeFs) {
+        // Fullscreen entered (including when user taps the player's internal fullscreen arrows!)
+        try {
+          if (screen.orientation && typeof screen.orientation.lock === 'function') {
+            await screen.orientation.lock('landscape');
+          } else if ((screen as any).lockOrientation) {
+            (screen as any).lockOrientation('landscape');
+          } else if ((screen as any).webkitLockOrientation) {
+            (screen as any).webkitLockOrientation('landscape');
+          } else if ((screen as any).mozLockOrientation) {
+            (screen as any).mozLockOrientation('landscape');
+          }
+        } catch (err) {
+          console.log('Native screen orientation lock not permitted by device settings:', err);
+          // If native lock failed and device is held vertically, activate CSS forced landscape
+          if (window.innerWidth < window.innerHeight) {
+            setIsForcedLandscape(true);
+          }
+        }
+      } else {
+        // Exited fullscreen -> release orientation lock
+        try {
+          if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+            screen.orientation.unlock();
+          } else if ((screen as any).unlockOrientation) {
+            (screen as any).unlockOrientation();
+          } else if ((screen as any).webkitUnlockOrientation) {
+            (screen as any).webkitUnlockOrientation();
+          } else if ((screen as any).mozUnlockOrientation) {
+            (screen as any).mozUnlockOrientation();
+          }
+        } catch (_) {}
+        setIsForcedLandscape(false);
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+
+      try {
+        if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+          screen.orientation.unlock();
+        }
+      } catch (_) {}
+    };
+  }, []);
+
+  const toggleFullscreen = async () => {
     if (!videoContainerRef.current) return;
-    if (!document.fullscreenElement) {
-      videoContainerRef.current.requestFullscreen().catch(err => {
+    const fsElement =
+      document.fullscreenElement ||
+      (document as any).webkitFullscreenElement ||
+      (document as any).mozFullScreenElement ||
+      (document as any).msFullscreenElement;
+
+    if (!fsElement) {
+      try {
+        const el = videoContainerRef.current as any;
+        if (el.requestFullscreen) {
+          await el.requestFullscreen();
+        } else if (el.webkitRequestFullscreen) {
+          await el.webkitRequestFullscreen();
+        } else if (el.mozRequestFullScreen) {
+          await el.mozRequestFullScreen();
+        } else if (el.msRequestFullscreen) {
+          await el.msRequestFullscreen();
+        }
+
+        // Attempt locking orientation immediately
+        if (screen.orientation && typeof screen.orientation.lock === 'function') {
+          await screen.orientation.lock('landscape').catch(() => {
+            if (window.innerWidth < window.innerHeight) {
+              setIsForcedLandscape(true);
+            }
+          });
+        } else if (window.innerWidth < window.innerHeight) {
+          setIsForcedLandscape(true);
+        }
+      } catch (err) {
         console.error('Error attempting to enable fullscreen:', err);
-      });
+        setIsForcedLandscape(true);
+      }
     } else {
-      document.exitFullscreen().catch(err => {
+      try {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if ((document as any).webkitExitFullscreen) {
+          await (document as any).webkitExitFullscreen();
+        } else if ((document as any).mozCancelFullScreen) {
+          await (document as any).mozCancelFullScreen();
+        } else if ((document as any).msExitFullscreen) {
+          await (document as any).msExitFullscreen();
+        }
+
+        if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+          screen.orientation.unlock();
+        }
+      } catch (err) {
         console.error('Error attempting to exit fullscreen:', err);
-      });
+      }
+      setIsForcedLandscape(false);
     }
+  };
+
+  const toggleForcedLandscape = () => {
+    setIsForcedLandscape(prev => !prev);
   };
 
   return (
@@ -242,6 +378,21 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
             <Tv className="w-5 h-5" />
           </button>
           
+          {/* Rotate Screen to Landscape button for Mobile and Tablets */}
+          <button
+            onClick={toggleForcedLandscape}
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-bold transition-all ${
+              isForcedLandscape 
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.35)]' 
+                : 'text-amber-400 hover:text-amber-300 bg-amber-950/20 border-amber-500/30 hover:border-amber-400'
+            }`}
+            title="تدوير الشاشة بالعرض وملء الشاشة للموبايل"
+          >
+            <RotateCw className="w-4 h-4 text-amber-400" />
+            <span className="hidden sm:inline">شاشة بالعرض</span>
+            <span className="sm:hidden text-[11px]">بالعرض</span>
+          </button>
+
           <button
             onClick={toggleFullscreen}
             className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
@@ -264,51 +415,90 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
       <div className="flex-1 flex flex-col lg:flex-row p-4 md:p-6 gap-6 max-w-7xl mx-auto w-full">
         {/* Player Column */}
         <div className={`flex flex-col flex-1 ${isTheaterMode ? 'w-full' : ''}`}>
-          {/* Video Container (16:9 Aspect Ratio) */}
+          {/* Video Container (16:9 Aspect Ratio or Fullscreen Rotated Landscape) */}
           <div 
             ref={videoContainerRef}
-            className="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border border-slate-800 glow-prime"
+            className={
+              isForcedLandscape
+                ? "fixed inset-0 z-[100] w-screen h-screen bg-black flex items-center justify-center overflow-hidden"
+                : "relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border border-slate-800 glow-prime"
+            }
           >
-            {/* Loading Indicator */}
-            {isLoading && (
-              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm pointer-events-none">
-                <div className="w-10 h-10 border-4 border-cyan-500/20 border-t-cyan-400 rounded-full animate-spin mb-3" />
-                <span className="text-sm text-cyan-300 font-medium">جاري تحميل البث...</span>
+            {/* Quick Exit Button when in Forced Landscape */}
+            {isForcedLandscape && (
+              <div className="absolute top-3 right-3 z-50 flex items-center gap-2">
+                <button
+                  onClick={() => setIsForcedLandscape(false)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/85 hover:bg-black text-amber-300 hover:text-white text-xs font-bold border border-amber-500/50 backdrop-blur-md shadow-2xl transition-all active:scale-95"
+                >
+                  <Minimize2 className="w-3.5 h-3.5" />
+                  <span>الوضع الرأسي (خروج)</span>
+                </button>
               </div>
             )}
 
-            {/* Video Render */}
-            {currentServer ? (() => {
-              const { url: streamUrl, isEmbed } = resolveStreamingUrl(currentServer.url);
-              return isEmbed || currentServer.type === 'embed' ? (
-                <iframe
-                  key={streamUrl}
-                  src={streamUrl}
-                  title={item.title}
-                  className="w-full h-full border-0 bg-black"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                  allowFullScreen
-                  onLoad={() => setIsLoading(false)}
-                />
-              ) : (
-                <video
-                  key={currentServer.url}
-                  src={currentServer.url}
-                  controls
-                  autoPlay
-                  playsInline
-                  onLoadedData={() => setIsLoading(false)}
-                  className="w-full h-full object-contain bg-black"
-                >
-                  متصفحك لا يدعم تشغيل هذا الفيديو مباشرة.
-                </video>
-              );
-            })() : (
-              <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 p-8 text-center">
-                <Server className="w-12 h-12 text-cyan-500 mb-2" />
-                <p>لا يتوفر سيرفر مشاهدة حالياً لهذا العمل.</p>
-              </div>
+            {/* Mobile Quick Rotate button over the player in standard mode */}
+            {!isForcedLandscape && (
+              <button
+                onClick={toggleForcedLandscape}
+                className="sm:hidden absolute top-3 left-3 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/80 hover:bg-black text-amber-300 border border-amber-500/40 text-[11px] font-bold backdrop-blur-md shadow-lg transition-all active:scale-95"
+                title="تدوير الشاشة بالعرض لمشاهدة أفضل"
+              >
+                <RotateCw className="w-3 h-3 text-amber-400" />
+                <span>شاشة بالعرض</span>
+              </button>
             )}
+
+            <div 
+              className={
+                isForcedLandscape
+                  ? isLandscapeMode
+                    ? "w-full h-full relative flex items-center justify-center bg-black"
+                    : "w-[100vh] h-[100vw] rotate-90 origin-center relative flex items-center justify-center bg-black"
+                  : "w-full h-full relative"
+              }
+            >
+              {/* Loading Indicator */}
+              {isLoading && (
+                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm pointer-events-none">
+                  <div className="w-10 h-10 border-4 border-cyan-500/20 border-t-cyan-400 rounded-full animate-spin mb-3" />
+                  <span className="text-sm text-cyan-300 font-medium">جاري تحميل البث...</span>
+                </div>
+              )}
+
+              {/* Video Render */}
+              {currentServer ? (() => {
+                const { url: streamUrl, isEmbed } = resolveStreamingUrl(currentServer.url);
+                return isEmbed || currentServer.type === 'embed' ? (
+                  <iframe
+                    key={streamUrl}
+                    src={streamUrl}
+                    title={item.title}
+                    className="w-full h-full border-0 bg-black"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen *; screen-wake-lock; orientation-lock"
+                    allowFullScreen
+                    onLoad={() => setIsLoading(false)}
+                  />
+                ) : (
+                  <video
+                    key={currentServer.url}
+                    src={currentServer.url}
+                    controls
+                    autoPlay
+                    playsInline
+                    onLoadedData={() => setIsLoading(false)}
+                    className="w-full h-full object-contain bg-black"
+                  >
+                    متصفحك لا يدعم تشغيل هذا الفيديو مباشرة.
+                  </video>
+                );
+              })() : (
+                <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 p-8 text-center">
+                  <Server className="w-12 h-12 text-cyan-500 mb-2" />
+                  <p>لا يتوفر سيرفر مشاهدة حالياً لهذا العمل.</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Servers Bar: VIP, MI, then 3, 4, 5, etc. + Optional Download Server */}
