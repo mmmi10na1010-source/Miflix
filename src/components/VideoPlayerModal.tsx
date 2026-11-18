@@ -377,6 +377,20 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
               )}
             </div>
 
+            {/* Adsterra Smartlink (ID: 31428672) */}
+            <div className="mt-3 pt-2.5 border-t border-slate-800/60 flex flex-wrap items-center justify-between gap-2">
+              <a
+                href="https://directyp.org/4/2355ae6acc47ab23d02f4059424dfa30"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-950/80 to-blue-950/80 hover:from-cyan-900/90 hover:to-blue-900/90 border border-cyan-500/40 hover:border-cyan-400 text-cyan-200 hover:text-white text-xs font-bold transition-all active:scale-95"
+              >
+                <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span>رابط سريع إضافي للمشاهدة والتحميل (دعم الموقع)</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800/90 text-slate-400 font-normal">إعلان</span>
+              </a>
+            </div>
+
             {/* Player Banner Ad */}
             {adSettings.isEnabled && adSettings.playerBannerHtml && (
               <AdSlot htmlContent={adSettings.playerBannerHtml} label="إعلان ممول" className="mt-3" />
