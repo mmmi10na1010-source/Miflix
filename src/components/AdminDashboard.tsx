@@ -482,11 +482,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 >
                   {/* Card Top: Poster & Info */}
                   <div className="flex items-start gap-3.5">
-                    <img
-                      src={item.posterUrl}
-                      alt={item.title}
-                      className="w-20 h-28 object-cover rounded-xl shrink-0 border border-slate-700/60 shadow-md"
-                    />
+                    {normalizeImageUrl(item.posterUrl || item.backdropUrl) ? (
+                      <img
+                        src={normalizeImageUrl(item.posterUrl || item.backdropUrl)}
+                        alt={item.title}
+                        className="w-20 h-28 object-cover rounded-xl shrink-0 border border-slate-700/60 shadow-md"
+                      />
+                    ) : (
+                      <div className="w-20 h-28 rounded-xl shrink-0 border border-slate-700/60 bg-[#141f2e] flex items-center justify-center text-[10px] text-slate-500 text-center p-1">
+                        لا توجد صورة
+                      </div>
+                    )}
 
                     <div className="flex-1 min-w-0 space-y-1.5">
                       <div className="flex items-center gap-1.5">
@@ -611,11 +617,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
             {/* Preview Card */}
             <div className="flex items-center gap-3 p-3 rounded-xl bg-[#141f2e] border border-slate-800 text-xs">
-              <img
-                src={itemToDelete.posterUrl}
-                alt={itemToDelete.title}
-                className="w-10 h-14 object-cover rounded-lg border border-slate-700"
-              />
+              {normalizeImageUrl(itemToDelete.posterUrl || itemToDelete.backdropUrl) && (
+                <img
+                  src={normalizeImageUrl(itemToDelete.posterUrl || itemToDelete.backdropUrl)}
+                  alt={itemToDelete.title}
+                  className="w-10 h-14 object-cover rounded-lg border border-slate-700"
+                />
+              )}
               <div>
                 <p className="font-bold text-white">{itemToDelete.title}</p>
                 <p className="text-[11px] text-slate-400">
@@ -1553,7 +1561,7 @@ const OrganizedMediaEditorModal: React.FC<OrganizedMediaEditorModalProps> = ({
                       </p>
                     </div>
                   )}
-                  {posterUrl && !isHtmlViewerImageUrl(posterUrl).isViewer && (
+                  {normalizeImageUrl(posterUrl) && !isHtmlViewerImageUrl(posterUrl).isViewer && (
                     <div className="flex items-center gap-2 pt-1">
                       <img 
                         src={normalizeImageUrl(posterUrl)} 

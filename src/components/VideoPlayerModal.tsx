@@ -139,15 +139,21 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
     }
   }, [currentEpisode?.id, item.id]);
 
-  // Safety fallback: if iframe loading takes more than 3.5s, remove loading overlay to reveal iframe
+  const currentServer: ServerSource | undefined = availableServers[selectedServerIndex] || availableServers[0];
+  const resolvedStream = currentServer ? resolveStreamingUrl(currentServer.url) : { url: '', isEmbed: false };
+  const hasValidStreamUrl = Boolean(resolvedStream.url && resolvedStream.url.trim());
+
+  // Safety fallback: if iframe loading takes more than 3.5s, or if stream URL is empty, remove loading overlay
   useEffect(() => {
+    if (!hasValidStreamUrl) {
+      setIsLoading(false);
+      return;
+    }
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 3500);
     return () => clearTimeout(timer);
-  }, [selectedServerIndex, currentEpisode?.id]);
-
-  const currentServer: ServerSource | undefined = availableServers[selectedServerIndex] || availableServers[0];
+  }, [selectedServerIndex, currentEpisode?.id, hasValidStreamUrl]);
 
   const handleServerSwitch = (index: number) => {
     setIsLoading(true);
@@ -270,7 +276,7 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
             className="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border border-slate-800 glow-prime"
           >
             {/* Loading Indicator */}
-            {isLoading && (
+            {isLoading && hasValidStreamUrl && (
               <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm pointer-events-none">
                 <div className="w-10 h-10 border-4 border-cyan-500/20 border-t-cyan-400 rounded-full animate-spin mb-3" />
                 <span className="text-sm text-cyan-300 font-medium">جاري تحميل البث...</span>
@@ -278,12 +284,11 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
             )}
 
             {/* Video Render */}
-            {currentServer ? (() => {
-              const { url: streamUrl, isEmbed } = resolveStreamingUrl(currentServer.url);
-              return isEmbed || currentServer.type === 'embed' ? (
+            {currentServer && hasValidStreamUrl ? (
+              resolvedStream.isEmbed || currentServer.type === 'embed' ? (
                 <iframe
-                  key={streamUrl}
-                  src={streamUrl}
+                  key={resolvedStream.url}
+                  src={resolvedStream.url}
                   title={item.title}
                   className="w-full h-full border-0 bg-black"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
@@ -292,8 +297,8 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
                 />
               ) : (
                 <video
-                  key={currentServer.url}
-                  src={currentServer.url}
+                  key={resolvedStream.url}
+                  src={resolvedStream.url}
                   controls
                   autoPlay
                   playsInline
@@ -302,8 +307,8 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
                 >
                   متصفحك لا يدعم تشغيل هذا الفيديو مباشرة.
                 </video>
-              );
-            })() : (
+              )
+            ) : (
               <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 p-8 text-center">
                 <Server className="w-12 h-12 text-cyan-500 mb-2" />
                 <p>لا يتوفر سيرفر مشاهدة حالياً لهذا العمل.</p>

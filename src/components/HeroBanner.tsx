@@ -18,16 +18,19 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   isSavedInList,
   onToggleList
 }) => {
+  const heroImage = normalizeImageUrl(item.backdropUrl || item.posterUrl);
   return (
     <section className="relative w-full h-[65vh] min-h-[480px] max-h-[680px] overflow-hidden select-none">
       {/* Background Media with Anamorphic Fade */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src={normalizeImageUrl(item.backdropUrl || item.posterUrl)}
-          alt={item.title}
-          referrerPolicy="no-referrer"
-          className="w-full h-full object-cover object-center scale-105 filter brightness-[0.8] contrast-[1.05]"
-        />
+      <div className="absolute inset-0 z-0 bg-[#0b1118]">
+        {heroImage && (
+          <img
+            src={heroImage}
+            alt={item.title}
+            referrerPolicy="no-referrer"
+            className="w-full h-full object-cover object-center scale-105 filter brightness-[0.8] contrast-[1.05]"
+          />
+        )}
 
         {/* Amazon Prime Cinematic Scrims (Deep navy black to cyan/blue ambient fade) */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0b1118] via-[#0b1118]/65 to-transparent" />

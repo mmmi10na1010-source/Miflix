@@ -54,13 +54,15 @@ export const MediaDetailsModal: React.FC<MediaDetailsModalProps> = ({
         </button>
 
         {/* Hero Backdrop Header */}
-        <div className="relative w-full h-64 sm:h-80 md:h-96">
-          <img
-            src={normalizeImageUrl(item.backdropUrl || item.posterUrl)}
-            alt={item.title}
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover object-center brightness-75"
-          />
+        <div className="relative w-full h-64 sm:h-80 md:h-96 bg-[#0a0f18]">
+          {normalizeImageUrl(item.backdropUrl || item.posterUrl) && (
+            <img
+              src={normalizeImageUrl(item.backdropUrl || item.posterUrl)}
+              alt={item.title}
+              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover object-center brightness-75"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-[#0c1420] via-[#0c1420]/60 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0c1420] via-transparent to-transparent" />
 
@@ -153,12 +155,14 @@ export const MediaDetailsModal: React.FC<MediaDetailsModalProps> = ({
           {/* Synopsis with Vertical Poster (Clean & Simple) */}
           <div className="flex flex-col sm:flex-row gap-5 items-start">
             <div className="hidden sm:block shrink-0 w-28 md:w-32 aspect-[2/3] rounded-xl overflow-hidden border border-slate-700/80 shadow-md bg-[#0c1420]">
-              <img
-                src={normalizeImageUrl(item.posterUrl || item.backdropUrl)}
-                alt={item.title}
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover object-center"
-              />
+              {normalizeImageUrl(item.posterUrl || item.backdropUrl) && (
+                <img
+                  src={normalizeImageUrl(item.posterUrl || item.backdropUrl)}
+                  alt={item.title}
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover object-center"
+                />
+              )}
             </div>
 
             <div className="flex-1 space-y-2">
